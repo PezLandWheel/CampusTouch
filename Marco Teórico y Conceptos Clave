@@ -1,0 +1,115 @@
+### 1.1. Del Problema al Requisito
+
+En la Ingeniería de Requisitos, el desarrollo del sistema parte de la identificación de una problemática existente en el contexto de la Facultad de Ingeniería en Sistemas y de las necesidades de sus usuarios.
+
+* **Problema:** La información académica y administrativa de la carrera de Ingeniería de Sistemas no se encuentra centralizada en un único punto de consulta, lo que puede dificultar el acceso rápido a información como eventos, horarios de docentes, horarios de cursos e información relacionada con permisos. Además, la actualización de estos contenidos requiere un mecanismo sencillo que permita a los docentes autorizados gestionarlos sin conocimientos técnicos avanzados.
+
+* **Necesidad:** Facilitar a los estudiantes el acceso a información académica y administrativa mediante una interfaz táctil de consulta pública, y proporcionar a los docentes autorizados una plataforma administrativa que permita crear, modificar y eliminar los contenidos publicados de manera sencilla.
+
+* **Requisito Funcional:** El sistema deberá permitir a los usuarios consultar información de la carrera de Ingeniería de Sistemas, incluyendo eventos, horarios de profesores, horarios de cursos e información relacionada con el sistema de permisos. Asimismo, deberá proporcionar una interfaz administrativa mediante la cual los profesores autorizados puedan gestionar dicha información y reflejar las modificaciones realizadas en la pantalla táctil.
+
+### 1.2. Historias de Usuario (HU)
+
+Las Historias de Usuario representan las principales necesidades de los actores que interactúan con el sistema: **estudiantes**, como usuarios de consulta pública, y **docentes autorizados**, como administradores del contenido.
+
+#### HU-01 — Consultar carreras
+
+* **Como** estudiante
+* **Quiero** visualizar el menú principal con las carreras disponibles
+* **Para** seleccionar la carrera de mi interés y acceder a su información.
+
+#### HU-02 — Consultar información de Ingeniería de Sistemas
+
+* **Como** estudiante
+* **Quiero** seleccionar la carrera de Ingeniería de Sistemas
+* **Para** acceder a la información académica y administrativa disponible.
+
+#### HU-03 — Consultar eventos
+
+* **Como** estudiante
+* **Quiero** consultar los eventos relacionados con Ingeniería de Sistemas
+* **Para** conocer las actividades académicas y sociales de la carrera.
+
+#### HU-04 — Consultar detalles de eventos
+
+* **Como** estudiante
+* **Quiero** visualizar los detalles de un evento
+* **Para** conocer información como nombre, fecha, hora, lugar y descripción.
+
+#### HU-05 — Consultar horarios de profesores
+
+* **Como** estudiante
+* **Quiero** consultar los horarios de atención de los profesores
+* **Para** conocer cuándo puedo acceder a sus espacios de atención.
+
+#### HU-06 — Consultar horarios de cursos
+
+* **Como** estudiante
+* **Quiero** consultar los horarios de los cursos
+* **Para** conocer la información correspondiente a los cursos vigentes.
+
+#### HU-07 — Consultar información sobre permisos
+
+* **Como** estudiante
+* **Quiero** consultar información relacionada con el sistema de permisos institucional
+* **Para** conocer cómo acceder a dicho sistema.
+
+#### HU-08 — Acceder al sistema de permisos
+
+* **Como** estudiante
+* **Quiero** utilizar el código QR disponible en la pantalla táctil
+* **Para** acceder al sistema de permisos institucional existente.
+
+#### HU-09 — Iniciar sesión como administrador
+
+* **Como** docente autorizado
+* **Quiero** iniciar sesión en la interfaz administrativa
+* **Para** acceder de forma segura a la gestión de información del sistema.
+
+#### HU-10 — Gestionar información
+
+* **Como** docente autorizado
+* **Quiero** crear, modificar y eliminar información
+* **Para** mantener actualizados los contenidos disponibles para los estudiantes.
+
+#### HU-11 — Gestionar imágenes
+
+* **Como** docente autorizado
+* **Quiero** agregar, modificar y eliminar imágenes
+* **Para** mantener actualizados los recursos visuales de la interfaz.
+
+#### HU-12 — Gestionar eventos
+
+* **Como** docente autorizado
+* **Quiero** crear, modificar y eliminar información de los eventos
+* **Para** mantener actualizada la agenda de actividades de la carrera.
+
+#### HU-13 — Gestionar horarios de profesores
+
+* **Como** docente autorizado
+* **Quiero** administrar los horarios de atención de los profesores
+* **Para** mantener disponible información actualizada para los estudiantes.
+
+#### HU-14 — Gestionar horarios de cursos
+
+* **Como** docente autorizado
+* **Quiero** administrar los horarios de los cursos
+* **Para** mantener actualizada la información académica publicada.
+
+#### HU-15 — Gestionar información de permisos
+
+* **Como** docente autorizado
+* **Quiero** administrar la información relacionada con los permisos y el código QR o recurso correspondiente
+* **Para** garantizar que los estudiantes tengan acceso al mecanismo institucional vigente.
+
+#### HU-16 — Actualizar información publicada
+
+* **Como** docente autorizado
+* **Quiero** que los cambios realizados en la plataforma administrativa se reflejen en la pantalla táctil
+* **Para** asegurar que los estudiantes consulten información actualizada.
+
+#### HU-17 — Incorporar nuevas carreras
+
+* **Como** docente autorizado
+* **Quiero** que el sistema permita incorporar nuevas carreras
+* **Para** ampliar posteriormente la solución a otras carreras de la Facultad sin rediseñar completamente el sistema.
