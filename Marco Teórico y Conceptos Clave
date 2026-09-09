@@ -113,3 +113,224 @@ Las Historias de Usuario representan las principales necesidades de los actores 
 * **Como** docente autorizado
 * **Quiero** que el sistema permita incorporar nuevas carreras
 * **Para** ampliar posteriormente la solución a otras carreras de la Facultad sin rediseñar completamente el sistema.
+
+
+### 1.3. Criterios de Aceptación (Reglas INVEST)
+
+Los criterios de aceptación permiten verificar que cada Historia de Usuario cumple con las condiciones necesarias para considerarse terminada. Se establecen a partir de las funcionalidades y restricciones definidas para el sistema.
+
+#### HU-01 — Consultar carreras
+
+**Criterios de aceptación:**
+
+* [ ] El sistema muestra un menú principal con las carreras disponibles.
+* [ ] El estudiante puede visualizar las opciones disponibles.
+* [ ] La información se presenta de forma clara y legible.
+
+**Validación INVEST:** Independiente, valiosa, estimable, pequeña y testeable.
+
+---
+
+#### HU-02 — Consultar información de Ingeniería de Sistemas
+
+**Criterios de aceptación:**
+
+* [ ] El estudiante puede seleccionar Ingeniería de Sistemas.
+* [ ] Al seleccionar la carrera, el sistema muestra el menú de información correspondiente.
+* [ ] Las opciones disponibles pueden ser seleccionadas mediante la pantalla táctil.
+
+**Validación INVEST:** Independiente, valiosa, estimable, pequeña y testeable.
+
+---
+
+#### HU-03 — Consultar eventos
+
+**Criterios de aceptación:**
+
+* [ ] El sistema permite acceder a la sección de eventos.
+* [ ] Se muestran los eventos relacionados con Ingeniería de Sistemas.
+* [ ] La información puede ser consultada desde la interfaz pública.
+
+**Validación INVEST:** Independiente, valiosa, estimable, pequeña y testeable.
+
+---
+
+#### HU-04 — Consultar detalles de eventos
+
+**Criterios de aceptación:**
+
+* [ ] El usuario puede seleccionar un evento.
+* [ ] El sistema muestra el nombre del evento.
+* [ ] El sistema muestra la fecha y hora cuando hayan sido definidas.
+* [ ] El sistema muestra el lugar y descripción cuando hayan sido definidos.
+* [ ] La información se presenta de forma clara y organizada.
+
+**Validación INVEST:** Independiente, valiosa, estimable, pequeña y testeable.
+
+---
+
+#### HU-05 — Consultar horarios de profesores
+
+**Criterios de aceptación:**
+
+* [ ] El sistema permite acceder a los horarios de profesores.
+* [ ] Se muestran los horarios correspondientes a la carrera seleccionada.
+* [ ] La información es visible desde la interfaz pública.
+* [ ] Los horarios se presentan de forma clara y legible.
+
+**Validación INVEST:** Independiente, valiosa, estimable, pequeña y testeable.
+
+---
+
+#### HU-06 — Consultar horarios de cursos
+
+**Criterios de aceptación:**
+
+* [ ] El sistema permite acceder a los horarios de cursos.
+* [ ] Se muestran los horarios correspondientes a los cursos de la carrera.
+* [ ] La información se presenta de manera organizada y legible.
+
+**Validación INVEST:** Independiente, valiosa, estimable, pequeña y testeable.
+
+---
+
+#### HU-07 — Consultar información sobre permisos
+
+**Criterios de aceptación:**
+
+* [ ] El sistema dispone de una sección informativa sobre permisos.
+* [ ] El usuario puede acceder a dicha información desde la interfaz pública.
+* [ ] La información presentada corresponde al sistema institucional existente.
+
+**Validación INVEST:** Independiente, valiosa, estimable, pequeña y testeable.
+
+---
+
+#### HU-08 — Acceder al sistema de permisos
+
+**Criterios de aceptación:**
+
+* [ ] El sistema muestra un código QR cuando esta sea la alternativa definida.
+* [ ] El código QR permite acceder al sistema de permisos existente.
+* [ ] El sistema no modifica ni desarrolla la plataforma institucional de permisos.
+
+**Validación INVEST:** Independiente, valiosa, estimable, pequeña y testeable.
+
+---
+
+#### HU-09 — Iniciar sesión como administrador
+
+**Criterios de aceptación:**
+
+* [ ] El sistema dispone de una interfaz administrativa independiente.
+* [ ] Los docentes autorizados pueden iniciar sesión.
+* [ ] Los usuarios no autorizados no pueden acceder a las funciones administrativas.
+* [ ] Las credenciales de acceso se encuentran protegidas.
+
+**Validación INVEST:** Independiente, valiosa, estimable, pequeña y testeable.
+
+---
+
+#### HU-10 — Gestionar información
+
+**Criterios de aceptación:**
+
+* [ ] El docente autorizado puede crear información.
+* [ ] El docente autorizado puede modificar información.
+* [ ] El docente autorizado puede eliminar información.
+* [ ] Los cambios realizados se almacenan correctamente.
+* [ ] Solo usuarios con los permisos correspondientes pueden realizar estas acciones.
+
+**Validación INVEST:** Independiente, valiosa, estimable, pequeña y testeable.
+
+---
+
+#### HU-11 — Gestionar imágenes
+
+**Criterios de aceptación:**
+
+* [ ] El docente autorizado puede agregar imágenes.
+* [ ] El docente autorizado puede modificar imágenes.
+* [ ] El docente autorizado puede eliminar imágenes.
+* [ ] Las imágenes administradas pueden utilizarse en la interfaz de usuario.
+
+**Validación INVEST:** Independiente, valiosa, estimable, pequeña y testeable.
+
+---
+
+#### HU-12 — Gestionar eventos
+
+**Criterios de aceptación:**
+
+* [ ] El administrador puede crear eventos.
+* [ ] El administrador puede modificar eventos existentes.
+* [ ] El administrador puede eliminar eventos.
+* [ ] La información administrada puede incluir nombre, fecha, hora, lugar y descripción.
+* [ ] Los cambios se reflejan en la interfaz pública.
+
+**Validación INVEST:** Independiente, valiosa, estimable, pequeña y testeable.
+
+---
+
+#### HU-13 — Gestionar horarios de profesores
+
+**Criterios de aceptación:**
+
+* [ ] El administrador puede agregar horarios de profesores.
+* [ ] El administrador puede modificar horarios existentes.
+* [ ] El administrador puede eliminar horarios.
+* [ ] Los cambios se reflejan en la información disponible para los estudiantes.
+
+**Validación INVEST:** Independiente, valiosa, estimable, pequeña y testeable.
+
+---
+
+#### HU-14 — Gestionar horarios de cursos
+
+**Criterios de aceptación:**
+
+* [ ] El administrador puede agregar horarios de cursos.
+* [ ] El administrador puede modificar horarios existentes.
+* [ ] El administrador puede eliminar horarios.
+* [ ] Los cambios se reflejan en la interfaz pública.
+
+**Validación INVEST:** Independiente, valiosa, estimable, pequeña y testeable.
+
+---
+
+#### HU-15 — Gestionar información de permisos
+
+**Criterios de aceptación:**
+
+* [ ] El administrador puede modificar la información presentada en la sección de permisos.
+* [ ] El administrador puede gestionar el código QR o recurso correspondiente cuando aplique.
+* [ ] Los cambios se reflejan en la interfaz pública.
+* [ ] El sistema de permisos institucional no es modificado por esta solución.
+
+**Validación INVEST:** Independiente, valiosa, estimable, pequeña y testeable.
+
+---
+
+#### HU-16 — Actualizar información publicada
+
+**Criterios de aceptación:**
+
+* [ ] Los cambios realizados desde la interfaz administrativa se reflejan en la pantalla táctil.
+* [ ] La información mostrada corresponde a la versión actualizada.
+* [ ] Los cambios no requieren modificar directamente el código fuente.
+* [ ] Se mantiene la integridad de la información durante la actualización.
+
+**Validación INVEST:** Independiente, valiosa, estimable, pequeña y testeable.
+
+---
+
+#### HU-17 — Incorporar nuevas carreras
+
+**Criterios de aceptación:**
+
+* [ ] El sistema cuenta con una estructura que permite incorporar nuevas carreras.
+* [ ] La incorporación de una nueva carrera no requiere rediseñar completamente la solución.
+* [ ] La información de cada carrera puede gestionarse de manera independiente.
+
+**Validación INVEST:** Independiente, valiosa, estimable, pequeña y testeable.
+
