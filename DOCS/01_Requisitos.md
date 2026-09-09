@@ -1,1 +1,2 @@
-
+* **(Usuario Final)estudiantes y profesores:** Realiza búsquedas de disponibilidad, solicita reservas de recursos y realiza el uso de las funciones que se encuentran dentro de la funcionalidad de la pantalla tactil.
+* **Administrador:** Gestiona usuarios, aprueba/rechaza solicitudes complejas, configura calendarios académicos y hace manipulación de las cosas a agregar, editar o eliminar dentro de este.
