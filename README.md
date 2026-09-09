@@ -12,10 +12,10 @@ La información académica y administrativa que requieren los estudiantes puede 
 
 Entre la información que se requiere consultar se encuentran:
 
-* 📅 Eventos académicos y sociales.
-* 👨‍🏫 Horarios de atención de docentes.
-* 📚 Horarios de cursos vigentes.
-* 📝 Información relacionada con el sistema de permisos institucional.
+*  Eventos académicos y sociales.
+*  Horarios de atención de docentes.
+*  Horarios de cursos vigentes.
+*  Información relacionada con el sistema de permisos institucional.
 
 Además, mantener esta información actualizada puede resultar poco práctico si se requiere intervención técnica para modificar los contenidos.
 
@@ -23,24 +23,23 @@ Por esta razón, se plantea el desarrollo de un sistema que permita **centraliza
 
 ---
 
-## 🎯 Objetivo
+##  Objetivo
 
 Desarrollar un sistema interactivo que facilite el acceso público a información académica y administrativa de la carrera de Ingeniería de Sistemas, incorporando una interfaz táctil para los estudiantes y una plataforma administrativa que permita a los docentes autorizados gestionar y actualizar los contenidos.
 
 ---
 
-## 🚀 Funcionalidades
+##  Funcionalidades
 
 ### 👨‍🎓 Perfil Usuario
 
 Los estudiantes podrán acceder desde la pantalla táctil a:
 
-* 🏫 Selección de carrera.
-* 📅 Consulta de eventos.
-* 👨‍🏫 Consulta de horarios de profesores.
-* 📚 Consulta de horarios de cursos.
-* 📝 Información sobre permisos.
-* 📱 Acceso mediante código QR al sistema institucional de permisos.
+*  Selección de carrera.
+*  Consulta de eventos.
+*  Consulta de horarios de profesores.
+*  Consulta de horarios de cursos.
+*  Acceso mediante código QR al sistema institucional de permisos.
 
 Los módulos de eventos, horarios de profesores y horarios de cursos son de carácter **informativo y de consulta pública**.
 
@@ -50,21 +49,21 @@ Los módulos de eventos, horarios de profesores y horarios de cursos son de car�
 
 Los docentes autorizados dispondrán de una plataforma administrativa independiente que permitirá:
 
-* 🔐 Iniciar sesión.
-* ➕ Crear información.
-* ✏️ Modificar información.
-* 🗑️ Eliminar información.
-* 🖼️ Administrar imágenes.
-* 📅 Gestionar eventos.
-* 👨‍🏫 Gestionar horarios de profesores.
-* 📚 Gestionar horarios de cursos.
-* 📝 Administrar la información relacionada con permisos.
-* 📱 Administrar el código QR o recurso correspondiente.
-* 🔄 Reflejar las modificaciones realizadas en la pantalla táctil.
+*  Iniciar sesión.
+*  Crear información.
+*  Modificar información.
+*  Eliminar información.
+*  Administrar imágenes.
+*  Gestionar eventos.
+*  Gestionar horarios de profesores.
+*  Gestionar horarios de cursos.
+*  Administrar la información relacionada con permisos.
+*  Administrar el código QR o recurso correspondiente.
+*  Reflejar las modificaciones realizadas en la pantalla táctil.
 
 ---
 
-## 🏗️ Estructura general
+## Estructura general
 
 El sistema está compuesto por dos interfaces principales:
 
@@ -156,7 +155,7 @@ El sistema deberá considerar:
 
 ---
 
-## 🔒 Seguridad
+## Seguridad
 
 El sistema contempla diferentes niveles de acceso:
 
