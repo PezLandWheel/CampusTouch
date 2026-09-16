@@ -4,12 +4,16 @@
 
 | ID Issue | Historia de Usuario | Categoría MoSCoW | Criterio de Impacto (Valor de Negocio) | Justificación Estratégica | Estimación Empírica (Cualitativa) |
 | :-: | :--- | :-: | :--- | :--- | :--- |
-| **#1** | HU01 - Fila Virtual para Compra de Boletas | **Must Have** | Impacto Operativo | Garantiza la disponibilidad del servicio ante picos de tráfico extremo, evitando pérdidas financieras por caídas de servidor. | Complejidad Alta (Riesgo de infraestructura y concurrencia). |
-| **#2** | HU02 - Generación de Código QR Dinámico para Entradas | **Must Have** | Impacto Financiero y Seguridad | Mitiga el fraude por falsificación o reventa no autorizada, protegiendo la autenticidad del boleto. | Complejidad Media (Cifrado dinámico y lógica de tiempo). |
-| **#3** | HU03 - Parametrización de Zonas y Precios de Boletería | **Must Have** | Impacto Financiero | Permite la configuración comercial previa del evento. Sin esta función no existen productos a la venta. | Complejidad Baja (Gestión de formularios y tablas). |
-| **#4** | HU04 - Selección de Boletas mediante Mapa Interactivo | **Should Have** | Impacto UX | Ofrece una mejor experiencia visual e intuitiva al usuario, pero no detiene la venta si se reemplaza por una lista simple. | Complejidad Media-Alta (Lógica gráfica interactiva y reserva de sillas). |
-| **#5** | HU05 - Validación de Boletas en Punto de Acceso | **Must Have** | Impacto Operativo | Cierra el ciclo de la venta permitiendo el control de ingreso ágil en el recinto mediante dispositivos móviles. | Complejidad Baja-Media (Lectura QR y consumo de API). |
-
+| **#1** | HU01 - Consultar carreras e información académica | **Must Have** | Impacto Operativo | Garantiza la disponibilidad del servicio ante picos de tráfico extremo, evitando pérdidas financieras por caídas de servidor. | Complejidad Alta (Riesgo de infraestructura y concurrencia). |
+| **#2** | HU02 - Consultar horarios académicos| **Must Have** | Impacto Financiero y Seguridad | Mitiga el fraude por falsificación o reventa no autorizada, protegiendo la autenticidad del boleto. | Complejidad Media (Cifrado dinámico y lógica de tiempo). |
+| **#3** | HU03 - Consultar eventos institucionales | **Must Have** | Impacto Financiero | Permite la configuración comercial previa del evento. Sin esta función no existen productos a la venta. | Complejidad Baja (Gestión de formularios y tablas). |
+| **#4** | HU04 - Consultar y gestionar información de permisos | **Should Have** | Impacto UX | Ofrece una mejor experiencia visual e intuitiva al usuario, pero no detiene la venta si se reemplaza por una lista simple. | Complejidad Media-Alta (Lógica gráfica interactiva y reserva de sillas). |
+| **#5** | HU05 - Iniciar sesión como administrado | **Must Have** | Impacto Operativo | Cierra el ciclo de la venta permitiendo el control de ingreso ágil en el recinto mediante dispositivos móviles. | Complejidad Baja-Media (Lectura QR y consumo de API). |
+| **#1** | HU06 - Gestionar información del sistema | **Must Have** | Impacto Operativo | Garantiza la disponibilidad del servicio ante picos de tráfico extremo, evitando pérdidas financieras por caídas de servidor. | Complejidad Alta (Riesgo de infraestructura y concurrencia). |
+| **#2** | HU07 - Gestionar imágenes| **Must Have** | Impacto Financiero y Seguridad | Mitiga el fraude por falsificación o reventa no autorizada, protegiendo la autenticidad del boleto. | Complejidad Media (Cifrado dinámico y lógica de tiempo). |
+| **#3** | HU08 - Gestionar eventos | **Must Have** | Impacto Financiero | Permite la configuración comercial previa del evento. Sin esta función no existen productos a la venta. | Complejidad Baja (Gestión de formularios y tablas). |
+| **#4** | HU09 - Gestionar horarios académicos | **Should Have** | Impacto UX | Ofrece una mejor experiencia visual e intuitiva al usuario, pero no detiene la venta si se reemplaza por una lista simple. | Complejidad Media-Alta (Lógica gráfica interactiva y reserva de sillas). |
+| **#5** | HU10 - Gestionar carreras | **Must Have** | Impacto Operativo | Cierra el ciclo de la venta permitiendo el control de ingreso ágil en el recinto mediante dispositivos móviles. | Complejidad Baja-Media (Lectura QR y consumo de API). |
 ---
 
 ## 2. Alcance del Producto Mínimo Viable (MVP)
