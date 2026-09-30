@@ -1,10 +1,10 @@
 # DOCS/03_estimacion_y_costos.md: Estimación Formal y Presupuesto
 
 ## 1. Integrantes y Asignación de Roles
-* **Product Owner:** [Nombre del estudiante]
-* **Líder Técnico:** [Nombre del estudiante]
-* **Desarrollador(a) 1:** [Nombre del estudiante]
-* **Desarrollador(a) 2:** [Nombre del estudiante]
+* **Product Owner:** [Jose Luis Alberto Chamorro]
+* **Líder Técnico:** [David Sebastian Yepez]
+* **Desarrollador(a) 1:** [Brayan Andres Solarte]
+* **Desarrollador(a) 2:** [Johan Stiven Carvajal]
 
 ## 2. Parámetros Base de Estimación
 * **Historia Pivote Seleccionada:** [Nombre e ID de la HU Pivote]
@@ -14,7 +14,7 @@
 
 ## 3. Matriz Detallada de Estimación Formal y Presupuesto
 
-| ID Issue | Historia de Usuario | Story Points ($SP$) | Factor ($F_c$) | Esfuerzo ($E_i = SP \times F_c$) | Tarifa ($T_h$) | Costo Total ($C_i = E_i \times T_h$) | Justificación Técnica Juicio de Expertos |
+| ID Issue | Historia de Usuario | Story Points ($SP$) | Factor ($F_c$) | Esfuerzo ($E_i = SP \times F_c$) | Tarifa ($T_h$) | Costo Total ($C_i = E_i \times T_h$) | Justificación Técnica Juicio de Expertos |``
 | :-: | :--- | :-: | :-: | :-: | :-: | :-: | :--- |
 | **#1** | [Nombre HU] | X SP | 8 hrs/SP | XX hrs | $45.000 | $XXX.XXX COP | [Explicación de la complejidad y riesgos] |
 | **#2** | [Nombre HU] | X SP | 8 hrs/SP | XX hrs | $45.000 | $XXX.XXX COP | [Explicación de la complejidad y riesgos] |
