@@ -14,7 +14,7 @@
 
 ## 3. Matriz Detallada de Estimación Formal y Presupuesto
 
-| ID Issue | Historia de Usuario | Story Points ($SP$) | Factor ($F_c$) | Esfuerzo ($E_i = SP \times F_c$) | Tarifa ($T_h$) | Costo Total ($C_i = E_i \times T_h$) | Justificación Técnica Juicio de Expertos |``
+| ID Issue | Historia de Usuario | Story Points ($SP$) | Factor ($F_c$) | Esfuerzo ($E_i = SP \times F_c$) | Tarifa ($T_h$) | Costo Total ($C_i = E_i \times T_h$) | Justificación Técnica Juicio de Expertos |
 | :-: | :--- | :-: | :-: | :-: | :-: | :-: | :--- |
 | **#1** | [Nombre HU] | X SP | 8 hrs/SP | XX hrs | $45.000 | $XXX.XXX COP | [Explicación de la complejidad y riesgos] |
 | **#2** | [Nombre HU] | X SP | 8 hrs/SP | XX hrs | $45.000 | $XXX.XXX COP | [Explicación de la complejidad y riesgos] |
