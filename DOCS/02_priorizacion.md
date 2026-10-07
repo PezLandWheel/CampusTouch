@@ -56,14 +56,14 @@ La estimación y priorización se mantienen alineadas con la línea base definid
 
 | Historia | Prioridad | SP |
 | :--- | :---: | :-: |
-| HU-01 — Consulta de información pública | Must Have | 3 SP |
-| HU-02 — Acceso del estudiante a información privada | Must Have | 8 SP |
-| HU-03 — Gestión de noticias e imágenes | Must Have | 5 SP |
-| HU-04 — Gestión académica | Must Have | 8 SP |
-| HU-05 — Gestión de enlaces institucionales | Must Have | 3 SP |
-| HU-06 — Administración de usuarios y roles | Must Have | 8 SP |
-| HU-07 — Acceso al panel administrativo | Must Have | 5 SP |
-| HU-08 — Integración con servicios externos | Must Have | 5 SP |
+| HU-01 — Consulta de información pública | Must-Have | 3 SP |
+| HU-02 — Acceso del estudiante a información privada | Must-Have | 8 SP |
+| HU-03 — Gestión de noticias e imágenes | Should-Have | 5 SP |
+| HU-04 — Gestión académica | Should-Have | 8 SP |
+| HU-05 — Gestión de enlaces institucionales | Must-Have | 3 SP |
+| HU-06 — Administración de usuarios y roles | Must-Have | 8 SP |
+| HU-07 — Acceso al panel administrativo | Could-Have | 5 SP |
+| HU-08 — Integración con servicios externos | Should-Have | 5 SP |
 | **Total** | | **45 SP** |
 
 ### Alcance del Producto Mínimo Viable (MVP)
