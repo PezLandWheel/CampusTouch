@@ -68,7 +68,7 @@ La estimación y priorización se mantienen alineadas con la línea base definid
 
 ### Alcance del Producto Mínimo Viable (MVP)
 
-El **Producto Mínimo Viable (MVP)** estará compuesto por las ocho historias clasificadas como **Must Have**: **HU-01, HU-02, HU-03, HU-04, HU-05, HU-06, HU-07 y HU-08**.
+El **Producto Mínimo Viable (MVP)** estará compuesto por las ocho historias: **HU-01, HU-02, HU-03, HU-04, HU-05, HU-06, HU-07 y HU-08**.
 
 Estas historias cubren de extremo a extremo el alcance establecido para CampusTouch:
 
