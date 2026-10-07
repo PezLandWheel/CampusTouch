@@ -1,28 +1,30 @@
-# Estimación del Plan de Proyecto y Modelos de Proceso - Proyecto CampusTouch
+# Plan de Proyecto y Modelos de Proceso - Proyecto CampusTouch
 
 ## 1. Selección y Justificación del Modelo de Proceso
 
-Para el desarrollo y despliegue de la plataforma **CampusTouch** se ha seleccionado el modelo de proceso **Scrum (Marco Ágil)**. La justificación técnica de esta elección se fundamenta en la necesidad de desarrollar el sistema de manera iterativa, permitiendo validar progresivamente las funcionalidades de consulta y administración de información académica.
+Para el desarrollo y despliegue de la plataforma **CampusTouch** se ha seleccionado el modelo de proceso **Scrum (Marco Ágil)**. La elección se fundamenta en la necesidad de desarrollar el sistema de manera iterativa e incremental, validando progresivamente las funcionalidades de consulta pública, acceso privado de estudiantes, administración de contenidos, gestión académica e integraciones externas.
 
-CampusTouch requiere implementar un núcleo funcional compuesto por consultas de carreras e información académica, consulta de horarios, autenticación de administradores y gestión de la información del sistema. El enfoque iterativo e incremental de Scrum permite priorizar las historias clasificadas como **Must-Have**, obtener entregas funcionales al finalizar cada Sprint y recibir retroalimentación temprana antes de incorporar funcionalidades de menor prioridad.
+CampusTouch presenta un alcance que combina funcionalidades de distinta complejidad: una interfaz pública para pantalla táctil, autenticación y protección de información académica privada, operaciones CRUD sobre contenidos y datos académicos, administración de usuarios y roles y conexión con servicios institucionales externos. Scrum permite dividir este alcance en incrementos funcionales, priorizar el trabajo, recibir retroalimentación temprana y ajustar las implementaciones a medida que se reduzca la incertidumbre técnica.
 
-Además, Scrum permite gestionar de manera flexible la complejidad asociada a la autenticación, persistencia de información, operaciones de creación, modificación y eliminación de datos y actualización de la información académica visible para los usuarios.
+El modelo también facilita la gestión de dependencias externas, especialmente la integración con la plataforma oficial de permisos de la Universidad y con el módulo de horarios de profesores desarrollado por otro grupo.
 
 ---
 
 ## 2. Parámetros de Planificación
 
-* **Velocidad del Equipo ($V$):** 12 SP / Sprint.
+* **Velocidad planificada del equipo ($V$):** 12 SP / Sprint.
 * **Duración por Sprint:** 2 Semanas.
 * **Factor de Conversión:** 1 SP = 8 Horas.
 * **Tarifa Hora:** $45.000 COP/Hora.
-* **Total SP del MVP (Historias Must-Have):** 22 SP (`HU01`: 2 SP, `HU02`: 2 SP, `HU05`: 3 SP, `HU06`: 5 SP, `HU09`: 5 SP, `HU10`: 5 SP).
-* **Número de Sprints Calculados para el MVP:** $N_{Sprints} = \frac{22}{12} = 1,83 \longrightarrow \mathbf{2\ Sprints}$.
-* **Duración Total del MVP:** 4 Semanas.
-* **Esfuerzo Total del MVP:** 176 Horas.
-* **Presupuesto Total del MVP:** $7.920.000 COP.
+* **Total SP del alcance actual:** 45 SP.
+* **Número de Sprints Calculados:** $N_{Sprints} = \frac{45}{12} = 3,75 \longrightarrow \mathbf{4\ Sprints}$.
+* **Duración Planificada:** 8 Semanas.
+* **Esfuerzo Total Estimado:** 360 Horas.
+* **Presupuesto Total Estimado:** $16.200.000 COP.
 
-La planificación considera únicamente las historias clasificadas como **Must-Have**. Las historias con prioridades inferiores quedan fuera del alcance de esta línea base.
+La planificación contempla las ocho historias de usuario actualmente aprobadas en el backlog: **HU-01 (#1), HU-02 (#2), HU-03 (#3), HU-04 (#4), HU-05 (#5), HU-06 (#6), HU-07 (#7) y HU-08 (#8)**.
+
+La capacidad teórica de cuatro Sprints es de **48 SP**, de los cuales **45 SP corresponden a historias** y **3 SP constituyen una reserva de capacidad** para integración, pruebas, correcciones y ajustes durante el desarrollo. Esta reserva permite mantener la planificación dentro de la velocidad establecida sin inflar artificialmente el alcance.
 
 ---
 
@@ -30,48 +32,133 @@ La planificación considera únicamente las historias clasificadas como **Must-H
 
 ### Sprint 1 (Semanas 1 y 2) · Capacidad: 12 SP
 
-* **[#1]:** `HU01 - Consultar carreras e información académica` (2 SP - $720.000 COP)
-* **[#2]:** `HU02 - Consultar horarios académicos` (2 SP - $720.000 COP)
-* **[#5]:** `HU05 - Iniciar sesión como administrador` (3 SP - $1.080.000 COP)
-* **[#6]:** `HU06 - Gestionar información del sistema` (5 SP - $1.800.000 COP)
-* **Carga Total del Sprint 1:** 12 SP | **Esfuerzo:** 96 Horas | **Costo Sprint 1:** $4.320.000 COP
+**Objetivo:** construir la experiencia pública inicial de CampusTouch y dejar disponible el flujo principal de consulta.
 
-El primer Sprint concentra las funcionalidades de consulta y el acceso administrativo, además de la gestión general de información del sistema. Con ello se establece una base funcional sobre la cual pueden construirse las funcionalidades específicas de administración académica.
+* **[#1]:** HU-01 - Consulta de información pública (**3 SP - $1.080.000 COP**).
+* **[#3]:** HU-03 - Gestión de noticias e imágenes (**5 SP - $1.800.000 COP**).
+* **[#5]:** HU-05 - Gestión de enlaces institucionales (**3 SP - $1.080.000 COP**).
+* **Reserva técnica:** **1 SP**.
+* **Carga de Historias:** **11 SP**.
+* **Esfuerzo de Historias:** **88 Horas**.
+* **Costo de Historias:** **$3.960.000 COP**.
+* **Reserva:** **1 SP | 8 Horas | $360.000 COP**.
+
+El Sprint 1 establece el flujo de bienvenida, navegación pública, noticias, imágenes y enlaces institucionales. También prepara la estructura necesaria para que el contenido pueda mantenerse de forma dinámica desde el sistema administrativo.
 
 ### Sprint 2 (Semanas 3 y 4) · Capacidad: 12 SP
 
-* **[#9]:** `HU09 - Gestionar horarios académicos` (5 SP - $1.800.000 COP)
-* **[#10]:** `HU10 - Gestionar carreras` (5 SP - $1.800.000 COP)
-* **Reserva de capacidad:** 2 SP para correcciones, integración, pruebas funcionales y ajustes derivados del Sprint 1.
-* **Carga de Historias del Sprint 2:** 10 SP | **Esfuerzo de Historias:** 80 Horas | **Costo de Historias:** $3.600.000 COP
-* **Capacidad restante:** 2 SP | **16 Horas**.
+**Objetivo:** implementar la seguridad de acceso estudiantil y avanzar en el núcleo de administración académica.
 
-La reserva de capacidad permite realizar integración entre módulos, pruebas, corrección de defectos y ajustes de las funcionalidades desarrolladas sin superar la capacidad planificada del Sprint.
+* **[#2]:** HU-02 - Acceso del estudiante a información privada (**8 SP - $2.880.000 COP**).
+* **[#4]:** HU-04 - Gestión académica (**4 SP de 8 SP - avance parcial**).
+* **Carga planificada:** **12 SP**.
+* **Esfuerzo planificado:** **96 Horas**.
+* **Costo planificado:** **$4.320.000 COP**.
+
+La prioridad del Sprint 2 es la separación entre información pública y privada. Se implementan autenticación, manejo de sesión y controles de acceso para proteger la información individual de los estudiantes. En paralelo se inicia la gestión académica, dejando desarrollada la primera parte de carreras, semestres, horarios y profesores.
+
+### Sprint 3 (Semanas 5 y 6) · Capacidad: 12 SP
+
+**Objetivo:** completar la gestión académica y construir el control de acceso administrativo.
+
+* **[#4]:** HU-04 - Gestión académica (**4 SP restantes de 8 SP - finalización**).
+* **[#6]:** HU-06 - Administración de usuarios y roles (**8 SP - $2.880.000 COP**).
+* **Carga total:** **12 SP**.
+* **Esfuerzo:** **96 Horas**.
+* **Costo:** **$4.320.000 COP**.
+
+Este Sprint completa las operaciones de gestión sobre carreras, semestres, horarios y profesores y desarrolla la administración de usuarios, roles y permisos. Con ello se establece el mecanismo de autorización necesario para proteger el panel administrativo y las funciones sensibles del sistema.
+
+### Sprint 4 (Semanas 7 y 8) · Capacidad: 12 SP
+
+**Objetivo:** completar el panel administrativo, integrar servicios externos y realizar la estabilización del sistema.
+
+* **[#7]:** HU-07 - Acceso al panel administrativo (**5 SP - $1.800.000 COP**).
+* **[#8]:** HU-08 - Integración con servicios externos (**5 SP - $1.800.000 COP**).
+* **Reserva para integración, pruebas y correcciones:** **2 SP | 16 Horas**.
+* **Carga de Historias:** **10 SP**.
+* **Esfuerzo de Historias:** **80 Horas**.
+* **Costo de Historias:** **$3.600.000 COP**.
+* **Capacidad restante:** **2 SP | 16 Horas**.
+
+La reserva final se destina a pruebas funcionales de extremo a extremo, corrección de defectos, validación de seguridad, ajustes de experiencia táctil y resolución de dependencias de integración. La integración con el sistema de permisos y con el módulo de horarios de profesores dependerá de las interfaces y mecanismos de acceso proporcionados por las partes externas.
 
 ---
 
-## 4. Resumen Comercial de la Propuesta (Línea Base Final)
+## 4. Resumen Comercial de la Propuesta (Línea Base Actualizada)
 
-* **Tiempo de Entrega del MVP:** 4 Semanas (2 Sprints).
+* **Tiempo de Entrega Estimado:** 8 Semanas (4 Sprints).
 * **Velocidad Planificada:** 12 SP/Sprint.
-* **Total Story Points del MVP:** 22 SP.
-* **Esfuerzo Total del MVP:** 176 Horas/Hombre.
-* **Inversión Financiera MVP:** $7.920.000 COP.
-* **Historias incluidas:** #1, #2, #5, #6, #9 y #10.
-* **Historias fuera del alcance:** Historias clasificadas como Should-Have y Could-Have.
+* **Total Story Points del alcance:** 45 SP.
+* **Capacidad Total Planificada:** 48 SP.
+* **Reserva de Capacidad:** 3 SP.
+* **Esfuerzo Total Estimado:** 360 Horas.
+* **Inversión Financiera Estimada:** $16.200.000 COP.
+* **Historias incluidas:** #1, #2, #3, #4, #5, #6, #7 y #8.
 
 ### Cálculo de la línea base
 
 $$
-SP_{total} = 2 + 2 + 3 + 5 + 5 + 5 = 22\ SP
+SP_{historias} = 3 + 8 + 5 + 8 + 3 + 8 + 5 + 5 = 45\ SP
 $$
 
 $$
-E_{total} = 22\ SP \times 8\ horas/SP = 176\ horas
+SP_{capacidad} = 4\ Sprints \times 12\ SP = 48\ SP
 $$
 
 $$
-C_{total} = 176\ horas \times \$45.000 = \$7.920.000\ COP
+SP_{reserva} = 48 - 45 = 3\ SP
 $$
 
-La propuesta establece un MVP de cuatro semanas dividido en dos Sprints. El primer Sprint utiliza su capacidad completa de 12 SP, mientras que el segundo Sprint contempla 10 SP de historias y reserva 2 SP para integración, pruebas y correcciones. Esta distribución mantiene la planificación dentro de la velocidad establecida y permite reducir el riesgo de sobrecarga durante la etapa final del MVP.
+$$
+E_{total} = 45\ SP \times 8\ horas/SP = 360\ horas
+$$
+
+$$
+C_{total} = 360\ horas \times \$45.000 = \$16.200.000\ COP
+$$
+
+La propuesta establece una línea base de **cuatro Sprints de dos semanas**, con tres Sprints orientados principalmente al desarrollo de funcionalidades y un Sprint final que completa el panel administrativo y las integraciones externas, además de reservar capacidad para pruebas y estabilización.
+
+La distribución se ha actualizado para reflejar el alcance vigente de CampusTouch: consulta pública, información privada del estudiante, gestión de noticias e imágenes, gestión académica, enlaces institucionales, administración de usuarios y roles, panel administrativo e integraciones externas.
+
+---
+
+## 5. Modelos de Proceso y Gestión del Desarrollo
+
+### 5.1. Roles Scrum
+
+* **Product Owner:** Jose Luis Alberto Chamorro.
+* **Líder Técnico:** David Sebastian Yepez.
+* **Equipo de Desarrollo:** Brayan Andres Solarte y Johan Stiven Carvajal.
+
+### 5.2. Eventos principales
+
+* **Sprint Planning:** definición del objetivo y selección de historias según prioridad y capacidad.
+* **Daily Scrum:** seguimiento breve del avance, impedimentos y coordinación del equipo.
+* **Sprint Review:** demostración del incremento funcional y validación de resultados.
+* **Sprint Retrospective:** identificación de mejoras para el siguiente Sprint.
+* **Refinamiento del Backlog:** revisión de historias, criterios de aceptación, dependencias y estimaciones.
+
+### 5.3. Criterio de finalización
+
+Una historia se considerará terminada cuando:
+
+- [ ] Todos sus criterios de aceptación estén cumplidos.
+- [ ] La funcionalidad haya sido integrada con el sistema correspondiente.
+- [ ] Se hayan realizado las pruebas funcionales necesarias.
+- [ ] No existan defectos críticos pendientes relacionados con la historia.
+- [ ] La implementación haya sido validada por el equipo y esté disponible en el incremento del Sprint.
+
+---
+
+## 6. Riesgos y Dependencias de Planificación
+
+* **Autenticación estudiantil:** la implementación definitiva dependerá del mecanismo de autenticación que la Universidad autorice y proporcione. La estimación contempla una solución integrada, pero la complejidad podría variar según la disponibilidad de servicios institucionales.
+* **Información académica privada:** las notas, registros y demás datos individuales deben mantenerse protegidos y únicamente disponibles para el estudiante autenticado correspondiente.
+* **Horarios de profesores:** existe una dependencia directa con el módulo desarrollado por otro grupo. La integración requiere definir previamente la interfaz, URL, API o mecanismo de comunicación disponible.
+* **Permisos institucionales:** CampusTouch dependerá de un enlace o servicio oficial de la Universidad para redirigir a la plataforma de solicitud de permisos.
+* **Pantalla táctil:** la interfaz debe validarse en el dispositivo físico disponible, considerando resolución, tamaño de controles, legibilidad y tiempos de respuesta.
+* **Carga administrativa:** las operaciones CRUD y la administración de roles requieren validar permisos para evitar modificaciones no autorizadas.
+
+La planificación deberá revisarse al finalizar cada Sprint. Los Story Points son una estimación relativa y el avance real podrá utilizar la velocidad obtenida por el equipo para ajustar la previsión de los Sprints siguientes.
