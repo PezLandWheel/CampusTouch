@@ -1,4 +1,4 @@
-# Reporte de Priorización MoSCoW, Valor de Negocio y Estimación Empírica - Proyecto CampusTouch
+<img width="1195" height="663" alt="image" src="https://github.com/user-attachments/assets/8de3c381-2614-48f5-9f73-97531c331639" /># Reporte de Priorización MoSCoW, Valor de Negocio y Estimación Empírica - Proyecto CampusTouch
 
 ## 2.1. Matriz de Priorización y Estimación Empírica
 
@@ -17,25 +17,24 @@ La priorización se actualiza a partir del alcance funcional vigente de **Campus
 
 ### 2.2. Priorización MoSCoW del Alcance
 
-Para la primera versión de CampusTouch, las ocho historias se consideran **Must Have** porque en conjunto representan el alcance funcional definido y necesario para entregar una solución completa.
-
 La priorización se establece de la siguiente manera:
 
-**Must Have**
-- HU-01 (#1): Consulta de información pública.
-- HU-02 (#2): Acceso del estudiante a información privada.
+**Should-Have**
+
 - HU-03 (#3): Gestión de noticias e imágenes.
 - HU-04 (#4): Gestión académica.
-- HU-05 (#5): Gestión de enlaces institucionales.
-- HU-06 (#6): Administración de usuarios y roles.
-- HU-07 (#7): Acceso al panel administrativo.
 - HU-08 (#8): Integración con servicios externos.
 
-**Should Have:** No se definen historias dentro de esta categoría para la línea base actual. Las funciones consideradas relevantes para la primera versión fueron incorporadas como Must Have para mantener consistencia con el alcance, la estimación de 45 SP y el plan de cuatro Sprints.
+**Must-Have:** 
 
-**Could Have:** No se definen historias dentro de esta categoría en la línea base actual. Nuevas funcionalidades que aparezcan durante el desarrollo deberán incorporarse mediante refinamiento del backlog y una nueva evaluación de prioridad.
+- HU-01 (#1): Consulta de información pública.
+- HU-02 (#2): Acceso del estudiante a información privada.
+- HU-05 (#5): Gestión de enlaces institucionales.
+- HU-06 (#6): Administración de usuarios y roles.
 
-**Won't Have:** No se incluyen funcionalidades que sustituyan sistemas oficiales de la Universidad, como la gestión directa de permisos o un sistema académico universitario completo. CampusTouch se limita a integrar o redirigir a dichos servicios cuando corresponda.
+**Could Have:**
+
+- HU-07 (#7): Acceso al panel administrativo.
 
 ### 2.3. Criterios utilizados para la priorización
 
