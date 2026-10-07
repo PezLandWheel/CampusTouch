@@ -1,4 +1,3 @@
-<img width="1195" height="663" alt="image" src="https://github.com/user-attachments/assets/8de3c381-2614-48f5-9f73-97531c331639" /># Reporte de Priorización MoSCoW, Valor de Negocio y Estimación Empírica - Proyecto CampusTouch
 
 ## 2.1. Matriz de Priorización y Estimación Empírica
 
