@@ -5,6 +5,18 @@ Esta guía explica dos formas de publicar CampusTouch. Ambas publican el sitio e
 - **Carga directa (Drag and drop):** compilas el sitio en tu computadora y subes la carpeta `dist`. Es la forma más rápida para publicar una versión manualmente.
 - **Integración con GitHub o GitLab:** conectas un repositorio y Cloudflare compila y publica cada cambio automáticamente. Es la opción más cómoda para actualizar el sitio con frecuencia.
 
+## Publicación actual
+
+CampusTouch ya está publicado en [https://campus-touch.pages.dev](https://campus-touch.pages.dev). Se creó el proyecto `campus-touch` como **Direct Upload** con rama de producción `main`. La portada, `/carreras/sistemas/inicio` y `/carreras/sistemas/noticias` fueron comprobadas y responden correctamente.
+
+Para publicar una actualización con Wrangler, inicia sesión con `npx wrangler login`, vuelve a compilar con `npm run build` y ejecuta:
+
+```powershell
+npx wrangler pages deploy dist --project-name=campus-touch --branch=main
+```
+
+Este proyecto es de carga directa. Cloudflare Pages no permite convertirlo después a integración Git; para usar builds automáticos conectados a GitHub o GitLab habría que crear otro proyecto Pages.
+
 ## Antes de comenzar
 
 Necesitas una cuenta de Cloudflare. Para la integración automática, necesitas además una cuenta y un repositorio en GitHub o GitLab. La carga directa no necesita un repositorio.

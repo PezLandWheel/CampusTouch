@@ -14,13 +14,34 @@ const slideImages = [
 
 export default function SystemsHomePage() {
   const [slide, setSlide] = useState(0);
-  const nextSlide = () => setSlide((current) => (current + 1) % slides.length);
-  const previousSlide = () => setSlide((current) => (current + slides.length - 1) % slides.length);
+  const [gallery, setGallery] = useState<Array<{ title: string; imageUrl: string }>>([]);
+  const [profile, setProfile] = useState<{ displayName?: string; motto?: string; description?: string; heroImageUrl?: string } | null>(null);
+  const [customLinks, setCustomLinks] = useState<Array<{ title: string; url: string; description?: string }>>([]);
+  const visibleSlides = gallery.length ? gallery.map((item) => ({ title: item.title, image: item.imageUrl })) : [...slides];
+  const nextSlide = () => setSlide((current) => (current + 1) % visibleSlides.length);
+  const previousSlide = () => setSlide((current) => (current + visibleSlides.length - 1) % visibleSlides.length);
 
   useEffect(() => {
-    const timer = setInterval(nextSlide, 6000);
-    return () => clearInterval(timer);
+    let active = true;
+    Promise.all([
+      fetch('/api/systems/public?section=gallery').then((response) => response.ok ? response.json() : null),
+      fetch('/api/systems/public?section=profile').then((response) => response.ok ? response.json() : null),
+      fetch('/api/systems/public?section=links').then((response) => response.ok ? response.json() : null),
+    ]).then(([galleryResult, profileResult, linksResult]) => {
+      if (!active) return;
+      if (galleryResult?.items) setGallery(galleryResult.items);
+      if (profileResult?.item) setProfile(profileResult.item);
+      if (linksResult?.items) setCustomLinks(linksResult.items);
+    }).catch(() => undefined);
+    return () => { active = false; };
   }, []);
+
+  useEffect(() => { setSlide((current) => Math.min(current, visibleSlides.length - 1)); }, [visibleSlides.length]);
+
+  useEffect(() => {
+    const timer = setInterval(() => setSlide((current) => (current + 1) % visibleSlides.length), 6000);
+    return () => clearInterval(timer);
+  }, [visibleSlides.length]);
 
   return (
     <main className="screen systems-screen systems-reference-screen">
@@ -37,30 +58,30 @@ export default function SystemsHomePage() {
 
         <div className="systems-reference-content">
           <section className="systems-showcase" aria-label="Ingeniería de Sistemas">
-            <div className="systems-showcase-image" style={{ backgroundImage: `linear-gradient(90deg,rgba(3,12,21,.8),rgba(3,12,21,.08) 82%),linear-gradient(0deg,rgba(2,10,18,.88),transparent 60%),url(${slides[slide].image})` }}>
+    <div className="systems-showcase-image" style={{ backgroundImage: `linear-gradient(90deg,rgba(3,12,21,.8),rgba(3,12,21,.08) 82%),linear-gradient(0deg,rgba(2,10,18,.88),transparent 60%),url(${profile?.heroImageUrl || visibleSlides[slide]?.image})` }}>
               <div className="systems-showcase-copy">
                 <span className="systems-blue-rule" />
                 <span className="systems-program-label">Ingeniería de</span>
-                <h1>Sistemas</h1>
-                <p className="systems-motto">Tecnología <i /> Innovación <i /> Futuro</p>
-                <p className="systems-description">Formamos profesionales capaces de diseñar, desarrollar e innovar soluciones tecnológicas para la sociedad.</p>
+                <h1>{profile?.displayName || 'Sistemas'}</h1>
+                <p className="systems-motto">{profile?.motto || 'Tecnología · Innovación · Futuro'}</p>
+                <p className="systems-description">{profile?.description || 'Formamos profesionales capaces de diseñar, desarrollar e innovar soluciones tecnológicas para la sociedad.'}</p>
                 <a className="systems-more" href="#opciones">Conoce más <ChevronRight size={23} /></a>
               </div>
             </div>
             <div className="systems-gallery">
               <button className="systems-gallery-arrow" onClick={previousSlide} aria-label="Imagen anterior"><ChevronLeft /></button>
               <div className="systems-thumbnails">
-                {slideLabels.map((label, index) => (
-                  <button key={label} className={`systems-thumbnail ${slide === index ? 'selected' : ''}`} onClick={() => setSlide(index)} aria-label={`Mostrar ${label}`}>
-                    <img src={slideImages[index]} alt="" />
-                    <span>{label}</span>
+                {visibleSlides.map((item, index) => (
+                  <button key={`${item.title}-${index}`} className={`systems-thumbnail ${slide === index ? 'selected' : ''}`} onClick={() => setSlide(index)} aria-label={`Mostrar ${item.title}`}>
+                    <img src={item.image} alt="" />
+                    <span>{item.title}</span>
                   </button>
                 ))}
               </div>
               <button className="systems-gallery-arrow" onClick={nextSlide} aria-label="Siguiente imagen"><ChevronRight /></button>
             </div>
-            <div className="systems-slide-dots" aria-label={`Imagen ${slide + 1} de ${slides.length}`}>
-              {slides.map((item, index) => <button key={item.title} className={slide === index ? 'selected' : ''} onClick={() => setSlide(index)} aria-label={`Ir a imagen ${index + 1}`} />)}
+            <div className="systems-slide-dots" aria-label={`Imagen ${slide + 1} de ${visibleSlides.length}`}>
+              {visibleSlides.map((item, index) => <button key={`${item.title}-${index}`} className={slide === index ? 'selected' : ''} onClick={() => setSlide(index)} aria-label={`Ir a imagen ${index + 1}`} />)}
             </div>
           </section>
 
@@ -75,6 +96,7 @@ export default function SystemsHomePage() {
                   'Inicia sesión para ver tu información',
                 ][index] }} />
               ))}
+              {customLinks.map((item) => <a className="systems-custom-link" key={item.url} href={item.url} target="_blank" rel="noreferrer"><strong>{item.title}</strong><span>{item.description || item.url}</span></a>)}
             </div>
           </section>
         </div>

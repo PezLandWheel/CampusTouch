@@ -1,4 +1,5 @@
 import { ArrowRight, GraduationCap, Newspaper } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { Background, CareerCard, Header, NewsCard } from '../components';
 import { careers } from '../data/careers';
 import { news } from '../data/news';
@@ -38,8 +39,8 @@ export default function WelcomePage() {
               </div>
             </div>
             <div className="career-list">
-              {careers.map((career, index) => (
-                <CareerCard key={career} name={career} active={index === 0} to={index === 0 ? '/carreras/sistemas' : undefined} />
+              {careers.map((career) => (
+                <CareerCard key={career} name={career} active={career === 'Ingeniería de Sistemas'} to={career === 'Ingeniería de Sistemas' ? '/carreras/sistemas' : undefined} />
               ))}
             </div>
           </section>
@@ -47,7 +48,7 @@ export default function WelcomePage() {
 
         <footer className="screen-footer welcome-footer">
           <span>FACULTAD DE INGENIERÍA</span>
-          <span>TOCA UNA CARRERA PARA CONTINUAR <ArrowRight size={14} /></span>
+          <span><Link className="welcome-admin-link" to="/login">ACCESO A CAMPUS TOUCH <ArrowRight size={14} /></Link></span>
         </footer>
       </div>
     </main>
