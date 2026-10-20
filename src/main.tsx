@@ -3,4 +3,5 @@ import './styles.css';
 import './auth-admin.css';
 import './login-pending.css';
 import './systems-admin.css';
+import './systems-schedules.css';
 ReactDOM.createRoot(document.getElementById('root')!).render(<React.StrictMode><BrowserRouter><App/></BrowserRouter></React.StrictMode>);
