@@ -1,0 +1,14 @@
+import { useEffect, useState } from 'react';
+import { CalendarDays, ChevronLeft, Clock3, Mail, MapPin, UserRound } from 'lucide-react';
+import { Link } from 'react-router-dom';
+
+type Teacher = { id: string; displayName: string; email: string; specialty: string; office: string; officeHours: string; photoUrl: string };
+export default function SystemsTeachersPage() {
+  const [teachers, setTeachers] = useState<Teacher[]>([]);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => { fetch('/api/systems/public?section=teachers').then((response) => response.json()).then((data) => setTeachers(data.items || [])).catch(() => undefined).finally(() => setLoading(false)); }, []);
+  return <main className="screen systems-catalog-screen"><div className="systems-catalog-backdrop" /><div className="systems-catalog-inner"><header className="systems-reference-header"><Link className="systems-return" to="/carreras/sistemas/inicio"><ChevronLeft size={22} /> Volver a Sistemas</Link><div className="systems-institution"><span className="systems-seal"><UserRound size={31} /></span><span><small>Universidad Mariana</small><strong>Facultad de Ingeniería</strong><em>Ingeniería de Sistemas</em></span></div><div className="systems-reference-clock"><strong>{new Intl.DateTimeFormat('es-CO',{hour:'2-digit',minute:'2-digit',hour12:false,timeZone:'America/Bogota'}).format(new Date())}</strong><span>Docentes y atención</span></div></header>
+    <section className="systems-catalog-panel"><div className="systems-catalog-title"><UserRound size={30} /><div><span>INGENIERÍA DE SISTEMAS</span><h1>Profesores y horarios de atención</h1><p>Encuentra la información de contacto y los espacios de acompañamiento docente.</p></div></div>
+      {loading ? <div className="systems-catalog-empty">Cargando docentes…</div> : teachers.length ? <div className="systems-teacher-grid">{teachers.map((teacher) => <article className="systems-teacher-card" key={teacher.id}><div className="systems-teacher-avatar">{teacher.photoUrl ? <img src={teacher.photoUrl} alt={teacher.displayName} /> : <UserRound size={27} />}</div><div className="systems-teacher-main"><h2>{teacher.displayName}</h2><p>{teacher.specialty || 'Docente de Ingeniería de Sistemas'}</p>{teacher.email && <a href={`mailto:${teacher.email}`}><Mail size={15} />{teacher.email}</a>}</div><div className="systems-teacher-details">{teacher.officeHours && <span><Clock3 size={16} /><span><small>Horario de atención</small><strong>{teacher.officeHours}</strong></span></span>}{teacher.office && <span><MapPin size={16} /><span><small>Ubicación</small><strong>{teacher.office}</strong></span></span>}</div></article>)}</div> : <div className="systems-catalog-empty"><CalendarDays size={28} /><strong>Aún no hay docentes publicados.</strong><span>La información aparecerá aquí cuando el administrador de Sistemas la registre.</span></div>}
+    </section></div></main>;
+}

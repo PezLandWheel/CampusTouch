@@ -1,0 +1,14 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "campus-touch",
+  "pages_build_output_dir": "./dist",
+  "compatibility_date": "2026-10-18",
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "campustouch-auth",
+      "database_id": "ff544ccb-42fd-4c20-ac06-bdf907b60b92",
+      "migrations_dir": "migrations"
+    }
+  ]
+}
