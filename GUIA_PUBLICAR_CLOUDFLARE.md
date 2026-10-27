@@ -120,9 +120,25 @@ Si Git indica que el repositorio ya está inicializado, no repitas `git init`; c
    | Build output directory | `dist` |
    | Root directory | `/` o en blanco, si el proyecto está en la raíz del repositorio |
 
-6. No hace falta añadir variables de entorno para la configuración actual de CampusTouch.
+6. No hacen falta variables de entorno. Los bindings `DB` (D1) y `NEWS_IMAGES` (R2) se declaran en `wrangler.jsonc`; asegúrate de que ambos estén conectados al proyecto y apunta `NEWS_IMAGES` al bucket `campustouch-news-images`.
 7. Selecciona **Save and Deploy** y espera a que Cloudflare instale dependencias, ejecute el build y publique el sitio.
 8. Al terminar, abre la dirección `*.pages.dev` mostrada en el panel.
+
+### Preparar el bucket R2 para imágenes de noticias
+
+El bucket es privado; Pages Functions autorizadas guardan imágenes y las sirven a la aplicación.
+
+1. Inicia sesión en Wrangler con `npx wrangler login`.
+2. Crea el bucket una sola vez:
+
+   ```powershell
+   npx.cmd --yes wrangler r2 bucket create campustouch-news-images
+   ```
+
+3. Confirma que `wrangler.jsonc` conserve el binding `NEWS_IMAGES` asociado a ese nombre de bucket.
+4. Vuelve a compilar y publicar CampusTouch para que Pages reciba el binding.
+
+En **Administración → Noticias**, el editor permite subir JPG, PNG o WebP de hasta 8 MB. La carga requiere una cuenta con permiso para editar noticias. Las imágenes subidas se guardan en R2; las rutas antiguas `/images/` y las URL HTTPS siguen siendo válidas.
 
 ### Publicar cambios futuros con Git
 

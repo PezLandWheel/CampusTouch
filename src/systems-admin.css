@@ -37,3 +37,9 @@
 .systems-admin-row-actions button:disabled{opacity:.45;cursor:not-allowed}
 @media(max-width:1250px){.systems-admin-role-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:640px){.systems-admin-role-grid{grid-template-columns:1fr}.systems-admin-sidebar-campus{min-height:140px}.systems-admin-role-card{min-height:175px}.systems-admin-roles-intro{align-items:flex-start;padding:11px}.systems-admin-roles-intro p{font-size:9px}}
+.systems-admin-news-image-upload{display:flex;flex-direction:column;gap:7px;min-width:0;padding:12px;border:1px dashed #7ca8d1;border-radius:9px;background:#f5f9fd}
+.systems-admin-news-image-upload>label{display:flex;flex-direction:column;gap:8px;color:#263f5e;font-size:10px;font-weight:700}
+.systems-admin-news-image-upload input[type=file]{width:100%;min-height:38px;padding:6px;border:1px solid #d6e2ef;border-radius:7px;background:#fff;color:#385675;font:400 10px 'DM Sans',Arial,sans-serif}
+.systems-admin-news-image-upload input[type=file]::file-selector-button{margin-right:9px;padding:7px 10px;border:0;border-radius:6px;background:#eaf2fa;color:#224b85;font:700 10px 'DM Sans',Arial,sans-serif;cursor:pointer}
+.systems-admin-news-image-upload>small{color:#71859a;font-size:9px;line-height:1.4}
+.systems-admin-news-image-upload>img{width:min(100%,360px);max-height:180px;object-fit:cover;border:1px solid #dce5ef;border-radius:8px;background:#fff}

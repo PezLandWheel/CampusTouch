@@ -1,0 +1,132 @@
+:root {
+  --um-blue: #224B85;
+  --um-royal: #244CC4;
+  --um-medium: #3567AA;
+  --um-sky: #4DC1ED;
+  --um-white: #FFFFFF;
+  --um-navy: #102B4D;
+  --um-blue-wash: #EAF2FA;
+  --um-blue-border: #C9D9EB;
+}
+
+::selection { background: var(--um-sky); color: var(--um-navy); }
+:focus-visible { outline-color: var(--um-sky); }
+
+/* Portal público */
+.brand-mark { border-color: color-mix(in srgb, var(--um-sky) 55%, transparent); color: var(--um-sky); }
+.tag { background: var(--um-royal); }
+.career-card.active { background: linear-gradient(105deg, var(--um-blue), var(--um-royal)); border-color: var(--um-sky); box-shadow: 0 7px 22px color-mix(in srgb, var(--um-royal) 35%, transparent); }
+.career-icon { color: #BFEAFF; }
+.overline, .menu-count { color: var(--um-sky); }
+.touch-button { background: linear-gradient(100deg, var(--um-blue), var(--um-royal)); box-shadow: 0 8px 24px color-mix(in srgb, var(--um-royal) 30%, transparent); }
+.dots span.selected { background: var(--um-sky); }
+.menu-icon, .systems-reference-options .menu-icon,
+.menu-icon.violet, .menu-icon.cyan, .menu-icon.green,
+.systems-reference-options .menu-icon.violet,
+.systems-reference-options .menu-icon.cyan,
+.systems-reference-options .menu-icon.green {
+  background: var(--um-medium);
+  box-shadow: 0 5px 16px color-mix(in srgb, var(--um-blue) 28%, transparent);
+}
+.systems-reference-options .menu-option:first-child { background: linear-gradient(100deg, var(--um-blue), var(--um-royal)); border-color: var(--um-sky); box-shadow: 0 0 0 2px color-mix(in srgb, var(--um-sky) 32%, transparent), 0 0 25px color-mix(in srgb, var(--um-blue) 35%, transparent); }
+.systems-blue-rule { background: var(--um-sky); box-shadow: 0 0 12px color-mix(in srgb, var(--um-sky) 65%, transparent); }
+.systems-more { border-color: var(--um-sky); background: linear-gradient(100deg, var(--um-blue), var(--um-royal)); box-shadow: 0 7px 23px color-mix(in srgb, var(--um-blue) 35%, transparent); }
+.systems-motto i { background: var(--um-sky); }
+.systems-news-readmore { color: var(--um-sky); }
+.systems-news-readmore:hover { color: #A8E8FF; }
+.systems-news-category.active { border-color: var(--um-sky); outline-color: color-mix(in srgb, var(--um-sky) 55%, transparent); background: linear-gradient(100deg, var(--um-blue), var(--um-royal)); box-shadow: 0 0 19px color-mix(in srgb, var(--um-sky) 22%, transparent); }
+
+/* Inicio de sesión */
+.login-eyebrow, .login-form-eyebrow, .login-university i { color: var(--um-sky); }
+.login-icon { border-color: var(--um-blue-border); background: var(--um-blue-wash); color: var(--um-blue); }
+.login-submit { background: linear-gradient(100deg, var(--um-blue), var(--um-royal)); box-shadow: 0 8px 18px color-mix(in srgb, var(--um-blue) 22%, transparent); }
+.login-form-eyebrow, .login-back { color: var(--um-blue); }
+.login-input:focus-within { border-color: var(--um-medium); box-shadow: 0 0 0 3px color-mix(in srgb, var(--um-sky) 20%, transparent); }
+.login-remember input { accent-color: var(--um-royal); }
+.login-story:after { background: linear-gradient(105deg, color-mix(in srgb, var(--um-blue) 88%, transparent), color-mix(in srgb, var(--um-medium) 64%, transparent) 60%, #102B4D70), linear-gradient(0deg, #102B4D9c, transparent 45%); }
+.login-trust svg { color: var(--um-sky); }
+.career-admin-future>span { background: var(--um-blue-wash); color: var(--um-blue); }
+.career-admin-future>p:first-of-type { color: var(--um-medium); }
+
+/* Administración general */
+.admin-nav-item.active { background: linear-gradient(100deg, var(--um-blue), var(--um-royal)); box-shadow: 0 6px 14px color-mix(in srgb, var(--um-blue) 25%, transparent); }
+.admin-primary-button { background: linear-gradient(100deg, var(--um-blue), var(--um-royal)); box-shadow: 0 5px 12px color-mix(in srgb, var(--um-blue) 22%, transparent); }
+.admin-menu-button:hover, .admin-role-card-icon { color: var(--um-blue); }
+.admin-role-card-icon, .admin-assign-panel h2>span, .admin-settings-form-heading>span { background: var(--um-blue-wash); }
+.admin-role-mini { background: var(--um-blue-wash); }
+.admin-role-mini>span { color: var(--um-blue); }
+.admin-role-mini strong, .admin-primary-button + a { color: var(--um-blue); }
+.admin-quick-panel button, .admin-settings-link { border-color: var(--um-blue-border); background: var(--um-blue-wash); color: var(--um-blue); }
+.admin-assign-panel h2>span, .admin-quick-panel h2 svg, .admin-profile-panel h2 svg { color: var(--um-blue); }
+.admin-role-grid .admin-role-card-icon, .admin-role-card-icon { color: var(--um-blue); }
+
+/* Administración de carrera */
+.systems-admin-sidebar { background: linear-gradient(180deg, var(--um-blue), #17365E 64%, #102B4D); }
+.systems-admin-sidebar:after { background: linear-gradient(0deg, #102B4D 0%, #102B4D68 72%, transparent), url('/images/campus-engineering.png') center/cover; }
+.systems-admin-nav-item.active { background: linear-gradient(105deg, var(--um-blue), var(--um-royal)); box-shadow: 0 7px 18px color-mix(in srgb, var(--um-blue) 30%, transparent); }
+.systems-admin-primary { background: linear-gradient(100deg, var(--um-blue), var(--um-royal)); box-shadow: 0 5px 13px color-mix(in srgb, var(--um-blue) 20%, transparent); }
+.systems-admin-menu-button:hover, .systems-admin-icon-button:hover, .systems-admin-text-link, .systems-admin-inline-link, .systems-admin-lightning, .systems-admin-health>header>svg { color: var(--um-blue); }
+.systems-admin-stat-icon.blue, .systems-admin-heading-icon.blue, .systems-admin-heading-icon.sky, .systems-admin-role-card>span { background: var(--um-blue-wash); color: var(--um-blue); }
+.systems-admin-stat-icon.green, .systems-admin-stat-icon.violet, .systems-admin-stat-icon.orange,
+.systems-admin-heading-icon.violet { background: var(--um-blue-wash); color: var(--um-blue); }
+.systems-admin-quick-grid .quick-blue, .systems-admin-quick-grid .quick-sky,
+.systems-admin-quick-grid .quick-green, .systems-admin-quick-grid .quick-violet,
+.systems-admin-quick-grid .quick-orange, .systems-admin-quick-grid .quick-slate { background: var(--um-blue-wash); color: var(--um-blue); }
+.systems-admin-chip { background: var(--um-blue-wash); color: var(--um-blue); }
+.systems-admin-add-user { border-color: var(--um-blue-border); background: var(--um-blue-wash); color: var(--um-blue); }
+.systems-admin-table td a { color: var(--um-blue); }
+.systems-admin-profile-cover>span { color: var(--um-sky); }
+.systems-admin-form-grid input:focus, .systems-admin-form-grid select:focus, .systems-admin-form-grid textarea:focus { outline-color: var(--um-sky); }
+.systems-admin-role-card>span { border-radius: 9px; }
+.role-card-green .admin-role-card-icon, .role-card-violet .admin-role-card-icon,
+.role-card-orange .admin-role-card-icon, .role-card-slate .admin-role-card-icon,
+.role-card-principal .admin-role-card-icon { background: var(--um-blue-wash); color: var(--um-blue); }
+.mini-green, .mini-violet, .mini-orange, .mini-slate { background: var(--um-blue-wash); }
+.mini-green>span, .mini-violet>span, .mini-orange>span, .mini-slate>span,
+.mini-green strong, .mini-violet strong, .mini-orange strong, .mini-slate strong { color: var(--um-blue); }
+
+/* Horarios */
+.systems-schedule-reference .systems-schedule-crest { border-color: color-mix(in srgb, var(--um-sky) 55%, transparent); color: #D9F4FF; }
+.systems-schedule-reference .systems-schedule-banner { background-image: linear-gradient(90deg, color-mix(in srgb, var(--um-blue) 78%, transparent), color-mix(in srgb, var(--um-medium) 42%, transparent) 48%, #102B4D40 100%), url('/images/campus-engineering.png'); }
+.systems-schedule-semester-heading>span { border-color: color-mix(in srgb, var(--um-sky) 35%, transparent); background: color-mix(in srgb, var(--um-blue) 28%, #071827); }
+.systems-schedule-semester-card { border-color: color-mix(in srgb, var(--um-medium) 70%, #061b2b); background: linear-gradient(145deg, color-mix(in srgb, var(--um-blue) 32%, #0a2a42), #061b2b); }
+.systems-schedule-semester-card:hover, .systems-schedule-semester-card:focus-visible { border-color: var(--um-sky); }
+.systems-schedule-semester-number { border-color: var(--um-medium); background: linear-gradient(145deg, var(--um-blue), #17365E); color: var(--um-white); }
+.systems-schedule-semester-count svg, .systems-schedule-semester-action { color: var(--um-sky); }
+.systems-schedule-back:hover { border-color: var(--um-sky); }
+.systems-schedule-modal { border-color: color-mix(in srgb, var(--um-sky) 50%, #fff 10%); }
+.systems-timetable-class.tone-cyan, .systems-schedule-modal.tone-cyan { --class-accent: var(--um-sky); --modal-accent: var(--um-sky); }
+.systems-timetable-class.tone-green, .systems-schedule-modal.tone-green { --class-accent: var(--um-medium); --modal-accent: var(--um-medium); }
+.systems-timetable-class.tone-violet, .systems-schedule-modal.tone-violet { --class-accent: var(--um-royal); --modal-accent: var(--um-royal); }
+.systems-timetable-class.tone-orange, .systems-schedule-modal.tone-orange { --class-accent: var(--um-blue); --modal-accent: var(--um-blue); }
+.systems-timetable-class.tone-pink, .systems-schedule-modal.tone-pink { --class-accent: #69B9DA; --modal-accent: #69B9DA; }
+.systems-timetable-class.tone-blue, .systems-schedule-modal.tone-blue { --class-accent: var(--um-royal); --modal-accent: var(--um-royal); }
+
+/* Shared form accents */
+input, select, textarea { accent-color: var(--um-royal); }
+
+/* Height and width adaptations: let long views use document scrolling. */
+@media (max-height: 820px) {
+  html, body { height: auto; min-height: 100%; }
+  #root { height: auto; min-height: 100svh; }
+  body { overflow-x: hidden; overflow-y: auto; }
+  .screen { height: auto; min-height: 100svh; overflow: visible; }
+  .screen-inner, .selection-inner { height: auto; min-height: 100svh; }
+  .welcome-grid, .systems-content, .systems-news-layout { flex: none; min-height: 600px; }
+  .systems-news-screen, .systems-news-inner { height: auto; min-height: 100svh; overflow: visible; }
+  .systems-news-layout { min-height: 650px; }
+}
+
+@media (min-width: 721px) and (max-height: 820px) {
+  .systems-reference-screen { height: auto; min-height: 100svh; overflow: visible; }
+  .systems-inner { height: auto; min-height: 100svh; }
+  .systems-reference-content { flex: none; min-height: 700px; }
+  .systems-showcase { min-height: 700px; }
+  .systems-reference-menu { align-items: flex-start; }
+}
+
+@media (max-width: 720px) {
+  html, body { height: auto; min-height: 100%; }
+  #root { height: auto; min-height: 100svh; }
+  body { overflow-x: hidden; overflow-y: auto; }
+}

@@ -1,7 +1,6 @@
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { GraduationCap } from 'lucide-react';
-import WelcomePage from './pages/WelcomePage';
 import CareerSelectionPage from './pages/CareerSelectionPage';
 import SystemsHomePage from './pages/SystemsHomePage';
 import SystemsNewsPage from './pages/SystemsNewsPage';
@@ -52,7 +51,7 @@ function CareerAdminRoute() {
 export default function App() {
   return (
     <Routes>
-      <Route path="/" element={<WelcomePage />} />
+      <Route path="/" element={<Navigate to="/carreras/sistemas/inicio" replace />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/carreras/sistemas" element={<CareerSelectionPage />} />
       <Route path="/carreras/sistemas/inicio" element={<SystemsHomePage />} />
@@ -64,7 +63,7 @@ export default function App() {
       {menuOptions.filter((option) => !['noticias', 'horarios', 'profesores'].includes(option.path) && !('externalUrl' in option)).map((option) => (
         <Route key={option.path} path={`/carreras/sistemas/${option.path}`} element={<PlaceholderPage />} />
       ))}
-      <Route path="*" element={<Navigate to="/" replace />} />
+      <Route path="*" element={<Navigate to="/carreras/sistemas/inicio" replace />} />
     </Routes>
   );
 }

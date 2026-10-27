@@ -83,6 +83,7 @@ export default function SystemsAdminPage({ user }: { user: AdminUser }) {
   const [collapsed, setCollapsed] = useState(false);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
   const [dialog, setDialog] = useState(false);
   const [editRow, setEditRow] = useState<Row | null>(null);
   const [form, setForm] = useState<Record<string, string>>({});
@@ -159,7 +160,7 @@ export default function SystemsAdminPage({ user }: { user: AdminUser }) {
       { key: 'status', label: 'Publicación', type: 'select', required: true, options: [{ value: 'DRAFT', label: 'Borrador' }, { value: 'PUBLISHED', label: 'Publicada' }] },
       { key: 'summary', label: 'Resumen', type: 'textarea', required: true, wide: true, placeholder: 'Texto corto que se verá en las tarjetas' },
       { key: 'body', label: 'Contenido completo', type: 'textarea', required: true, wide: true, placeholder: 'Desarrolla la noticia para la vista completa' },
-      { key: 'imageUrl', label: 'Imagen (URL https o imagen del sitio)', type: 'text', required: true, wide: true, placeholder: '/images/systems-lab.png' },
+      { key: 'imageUrl', label: 'Imagen de la noticia', type: 'text', required: true, wide: true, placeholder: 'Sube una imagen o pega una URL HTTPS' },
     ];
     if (target === 'gallery') return [
       { key: 'title', label: 'Título', required: true, wide: true }, { key: 'category', label: 'Categoría', placeholder: 'Campus, Laboratorios, Proyectos' },
@@ -209,8 +210,21 @@ export default function SystemsAdminPage({ user }: { user: AdminUser }) {
     setEditRow(item); setForm(Object.fromEntries(targetFields.map((field) => [field.key, source[field.key] == null ? '' : String(source[field.key])]))); setDialog(true);
   }
 
+  async function uploadNewsImage(file: File) {
+    setUploadingImage(true); setError(''); setNotice('');
+    try {
+      const payload = new FormData(); payload.append('image', file);
+      const response = await fetch('/api/systems/news-images', { method: 'POST', body: payload });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || 'No se pudo subir la imagen.');
+      setForm((current) => ({ ...current, imageUrl: result.imageUrl }));
+      setNotice('Imagen subida al bucket. Guarda la noticia para asociarla.');
+    } catch (cause) { setError(cause instanceof Error ? cause.message : 'No se pudo subir la imagen.'); }
+    finally { setUploadingImage(false); }
+  }
+
   async function submitForm(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault(); setSaving(true); setError(''); setNotice('');
+    event.preventDefault(); if (uploadingImage) return; setSaving(true); setError(''); setNotice('');
     const isProfile = section === 'profile';
     const url = editRow && !isProfile ? `/api/systems/manage/${section}/${encodeURIComponent(editRow.id)}` : '/api/systems/manage';
     const method = editRow && !isProfile ? 'PATCH' : 'POST';
@@ -328,7 +342,7 @@ export default function SystemsAdminPage({ user }: { user: AdminUser }) {
       </div>
     </section>
     {(notice || (error && section === 'dashboard')) && <div className={`systems-admin-toast ${error ? 'error' : ''}`} role="status">{error ? <X size={17} /> : <Check size={17} />}{error || notice}<button onClick={() => { setNotice(''); setError(''); }} aria-label="Cerrar aviso"><X size={15} /></button></div>}
-    {dialog && <div className="systems-admin-dialog-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setDialog(false); }}><section className="systems-admin-dialog" role="dialog" aria-modal="true" aria-labelledby="systems-dialog-title"><header><div><span>{sectionTitles[section]}</span><h2 id="systems-dialog-title">{section === 'profile' ? 'Editar información' : editRow ? 'Editar registro' : `Crear ${singular[section] || 'registro'}`}</h2></div><button className="systems-admin-icon-button" onClick={() => setDialog(false)} aria-label="Cerrar"><X /></button></header><form onSubmit={submitForm}><div className="systems-admin-form-grid">{fieldsFor(section).map((field) => <label className={field.wide ? 'wide' : ''} key={field.key}>{field.label}{field.type === 'textarea' ? <textarea required={field.required} maxLength={field.key === 'body' || field.key === 'description' ? 5000 : 500} value={form[field.key] || ''} placeholder={field.placeholder} onChange={(event) => setForm((current) => ({ ...current, [field.key]: event.target.value }))} /> : field.type === 'select' ? <select required={field.required} value={form[field.key] || ''} onChange={(event) => setForm((current) => ({ ...current, [field.key]: event.target.value, ...(field.key === 'semesterId' ? { subject: '' } : {}) }))}><option value="">Selecciona...</option>{field.options?.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}</select> : <input required={field.required} type={field.type || 'text'} min={field.min} max={field.max} maxLength={field.type === 'password' ? 128 : 500} value={form[field.key] || ''} placeholder={field.placeholder} onChange={(event) => setForm((current) => ({ ...current, [field.key]: event.target.value }))} />}</label>)}</div>{error && <p className="systems-admin-form-error" role="alert">{error}</p>}<footer><span><LockKeyhole size={15} />Los cambios se guardan en la base de datos D1.</span><button type="button" className="systems-admin-secondary" onClick={() => setDialog(false)}>Cancelar</button><button type="submit" className="systems-admin-primary" disabled={saving}>{saving ? 'Guardando…' : 'Guardar cambios'}</button></footer></form></section></div>}
+    {dialog && <div className="systems-admin-dialog-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setDialog(false); }}><section className="systems-admin-dialog" role="dialog" aria-modal="true" aria-labelledby="systems-dialog-title"><header><div><span>{sectionTitles[section]}</span><h2 id="systems-dialog-title">{section === 'profile' ? 'Editar información' : editRow ? 'Editar registro' : `Crear ${singular[section] || 'registro'}`}</h2></div><button className="systems-admin-icon-button" onClick={() => setDialog(false)} aria-label="Cerrar"><X /></button></header><form onSubmit={submitForm}><div className="systems-admin-form-grid">{fieldsFor(section).map((field) => <label className={field.wide ? 'wide' : ''} key={field.key}>{field.label}{field.type === 'textarea' ? <textarea required={field.required} maxLength={field.key === 'body' || field.key === 'description' ? 5000 : 500} value={form[field.key] || ''} placeholder={field.placeholder} onChange={(event) => setForm((current) => ({ ...current, [field.key]: event.target.value }))} /> : field.type === 'select' ? <select required={field.required} value={form[field.key] || ''} onChange={(event) => setForm((current) => ({ ...current, [field.key]: event.target.value, ...(field.key === 'semesterId' ? { subject: '' } : {}) }))}><option value="">Selecciona...</option>{field.options?.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}</select> : <input required={field.required} type={field.type || 'text'} min={field.min} max={field.max} maxLength={field.type === 'password' ? 128 : 500} value={form[field.key] || ''} placeholder={field.placeholder} onChange={(event) => setForm((current) => ({ ...current, [field.key]: event.target.value }))} />}</label>)}{section === 'news' && <div className="systems-admin-news-image-upload wide"><label>Subir archivo al bucket de noticias<input type="file" accept="image/jpeg,image/png,image/webp" disabled={uploadingImage} onChange={(event) => { const input = event.currentTarget; const file = input.files?.[0]; input.value = ''; if (file) void uploadNewsImage(file); }} /></label><small>JPG, PNG o WebP · Máximo 8 MB. También puedes pegar una URL HTTPS arriba.</small>{form.imageUrl && <img src={form.imageUrl} alt="Vista previa de la imagen de la noticia" />}</div>}</div>{error && <p className="systems-admin-form-error" role="alert">{error}</p>}<footer><span><LockKeyhole size={15} />Texto en D1 · imágenes en R2.</span><button type="button" className="systems-admin-secondary" onClick={() => setDialog(false)}>Cancelar</button><button type="submit" className="systems-admin-primary" disabled={saving || uploadingImage}>{uploadingImage ? 'Subiendo imagen…' : saving ? 'Guardando…' : 'Guardar cambios'}</button></footer></form></section></div>}
   </main>;
 }
 

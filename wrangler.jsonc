@@ -10,5 +10,11 @@
       "database_id": "ff544ccb-42fd-4c20-ac06-bdf907b60b92",
       "migrations_dir": "migrations"
     }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "NEWS_IMAGES",
+      "bucket_name": "campustouch-news-images"
+    }
   ]
 }

@@ -1,4 +1,5 @@
 import { canAccessSystemsSection, cleanText, hashPassword, isSameOrigin, json, passwordIsStrong, readJson, requireSystemsAdmin, roleNames, validEmail } from '../../_shared/auth.js';
+import { newsImageKey } from '../../_shared/news-images.js';
 
 const CAREER = 'ingenieria-sistemas';
 const roles = new Set(['CAREER_ADMIN', 'CONTENT_EDITOR', 'SCHEDULE_MANAGER', 'TEACHER_MANAGER', 'CONSULTANT', 'USER']);
@@ -6,6 +7,7 @@ const allowedSections = new Set(['dashboard', 'news', 'gallery', 'semesters', 's
 const values = (body, keys) => Object.fromEntries(keys.map((key) => [key, cleanText(body[key], key === 'body' || key === 'description' ? 5000 : 500)]));
 const required = (...items) => items.every((item) => item && item.trim().length > 0);
 const validImage = (value) => value.startsWith('/images/') || /^https:\/\//i.test(value);
+const validNewsImage = (value) => validImage(value) || Boolean(newsImageKey(value));
 const validUrl = (value) => /^https:\/\//i.test(value);
 
 async function listSection(env, section) {
@@ -89,7 +91,7 @@ export async function onRequestPost({ request, env }) {
   try {
     if (section === 'news') {
       const item = values(data, ['title', 'category', 'summary', 'body', 'imageUrl']); const status = data.status === 'PUBLISHED' ? 'PUBLISHED' : 'DRAFT';
-      if (!required(item.title, item.category, item.summary, item.body, item.imageUrl) || !validImage(item.imageUrl)) return json({ error: 'Completa los campos y utiliza una imagen segura (HTTPS o una imagen del sitio).' }, 400);
+      if (!required(item.title, item.category, item.summary, item.body, item.imageUrl) || !validNewsImage(item.imageUrl)) return json({ error: 'Completa los campos y utiliza una imagen segura (bucket, HTTPS o una imagen del sitio).' }, 400);
       await env.DB.prepare(`INSERT INTO systems_news (id, career_id, category, title, summary, body, image_url, status, published_at, created_at, updated_at)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(id, CAREER, item.category, item.title, item.summary, item.body, item.imageUrl, status, status === 'PUBLISHED' ? now : null, now, now).run();
     } else if (section === 'semesters') {
