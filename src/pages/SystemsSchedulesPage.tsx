@@ -54,6 +54,7 @@ export default function SystemsSchedulesPage() {
 
   return <main className={`screen systems-catalog-screen systems-schedule-screen systems-schedule-reference ${semester ? 'systems-schedule-expanded' : ''}`}>
     <header className="systems-schedule-banner"><div className="systems-schedule-banner-inner">
+      {!semester && <Link className="systems-schedule-back systems-schedule-header-back" to="/carreras/sistemas/inicio"><ArrowLeft size={20} /> Volver a Ingeniería de Sistemas</Link>}
       <div className="systems-schedule-brand"><span className="systems-schedule-crest"><GraduationCap size={35} /></span><span><small>Universidad</small><strong>Facultad de Ingeniería</strong><em>Conocimiento que construye el futuro</em></span></div>
       <div className="systems-schedule-date"><CalendarDays size={26} /><span><strong>{new Intl.DateTimeFormat('es-CO', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'America/Bogota' }).format(now)}</strong><small>{new Intl.DateTimeFormat('es-CO', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric', timeZone: 'America/Bogota' }).format(now)}</small></span></div>
     </div></header>
@@ -61,7 +62,7 @@ export default function SystemsSchedulesPage() {
     <div className="systems-catalog-inner">
       <section className="systems-catalog-panel systems-schedule-panel">
         {loading ? <div className="systems-catalog-empty">Cargando horarios…</div> : !semester ? <>
-          <div className="systems-schedule-semester-heading"><div className="systems-schedule-list-heading-copy"><Link className="systems-schedule-back" to="/carreras/sistemas/inicio"><ArrowLeft size={17} /> Volver a Ingeniería de Sistemas</Link><div className="systems-schedule-title"><h1>Horarios de Semestres</h1><p>Selecciona un semestre para consultar todos sus horarios.</p></div></div><span>{semesters.length} {semesters.length === 1 ? 'semestre disponible' : 'semestres disponibles'}</span></div>
+          <div className="systems-schedule-semester-heading"><div className="systems-schedule-list-heading-copy"><div className="systems-schedule-title"><h1>Horarios de Semestres</h1><p>Selecciona un semestre para consultar todos sus horarios.</p></div></div><span>{semesters.length} {semesters.length === 1 ? 'semestre disponible' : 'semestres disponibles'}</span></div>
           {semesters.length ? <div className="systems-schedule-semester-grid">{semesters.map((item) => {
             const semesterSchedules = schedules.filter((schedule) => schedule.semesterId === item.id);
             return <button className="systems-schedule-semester-card" key={item.id} type="button" onClick={() => { setSemester(item.id); setDay(''); setSearch(''); }}>

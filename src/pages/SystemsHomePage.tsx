@@ -14,7 +14,7 @@ const slideImages = [
 export default function SystemsHomePage() {
   const [slide, setSlide] = useState(0);
   const [gallery, setGallery] = useState<Array<{ title: string; imageUrl: string }>>([]);
-  const [newsSlides, setNewsSlides] = useState<Array<{ id: string; title: string; image: string; publishedAt: string }>>([]);
+  const [newsSlides, setNewsSlides] = useState<Array<{ id: string; title: string; summary: string; image: string; publishedAt: string }>>([]);
   const [profile, setProfile] = useState<{ displayName?: string; motto?: string; description?: string; heroImageUrl?: string } | null>(null);
   const [customLinks, setCustomLinks] = useState<Array<{ title: string; url: string; description?: string }>>([]);
   const visibleSlides: Array<{ id?: string; title: string; image: string }> = newsSlides.length ? newsSlides : gallery.length ? gallery.map((item) => ({ title: item.title, image: item.imageUrl })) : [...slides];
@@ -33,10 +33,10 @@ export default function SystemsHomePage() {
       if (galleryResult?.items) setGallery(galleryResult.items);
       if (newsResult?.items) {
         const latest = [...newsResult.items]
-          .filter((item: { publishedAt?: string | null; image?: string; title?: string }) => item.publishedAt && item.title && item.image)
+          .filter((item: { publishedAt?: string | null; image?: string; title?: string; summary?: string }) => item.publishedAt && item.title && item.summary && item.image)
           .sort((a: { publishedAt: string }, b: { publishedAt: string }) => Date.parse(b.publishedAt) - Date.parse(a.publishedAt))
           .slice(0, 4)
-          .map((item: { id: string; title: string; image: string; publishedAt: string }) => ({ id: item.id, title: item.title, image: item.image, publishedAt: item.publishedAt }));
+          .map((item: { id: string; title: string; summary: string; image: string; publishedAt: string }) => ({ id: item.id, title: item.title, summary: item.summary, image: item.image, publishedAt: item.publishedAt }));
         setNewsSlides(latest);
       }
       if (profileResult?.item) setProfile(profileResult.item);
@@ -46,6 +46,8 @@ export default function SystemsHomePage() {
   }, []);
 
   useEffect(() => { setSlide((current) => Math.min(current, visibleSlides.length - 1)); }, [visibleSlides.length]);
+
+  const featuredNews = newsSlides[slide];
 
   useEffect(() => {
     const timer = setInterval(() => setSlide((current) => (current + 1) % visibleSlides.length), 6000);
@@ -69,11 +71,11 @@ export default function SystemsHomePage() {
     <div className="systems-showcase-image" style={{ backgroundImage: `linear-gradient(90deg,rgba(3,12,21,.8),rgba(3,12,21,.08) 82%),linear-gradient(0deg,rgba(2,10,18,.88),transparent 60%),url(${newsSlides.length ? visibleSlides[slide]?.image : profile?.heroImageUrl || visibleSlides[slide]?.image})` }}>
               <div className="systems-showcase-copy">
                 <span className="systems-blue-rule" />
-                <span className="systems-program-label">Ingeniería de</span>
-                <h1>{profile?.displayName || 'Sistemas'}</h1>
-                <p className="systems-motto">{profile?.motto || 'Tecnología · Innovación · Futuro'}</p>
-                <p className="systems-description">{profile?.description || 'Formamos profesionales capaces de diseñar, desarrollar e innovar soluciones tecnológicas para la sociedad.'}</p>
-                <a className="systems-more" href="#opciones">Conoce más <ChevronRight size={23} /></a>
+                <span className="systems-program-label">{featuredNews ? 'Noticia destacada' : 'Ingeniería de'}</span>
+                <h1>{featuredNews?.title || profile?.displayName || 'Sistemas'}</h1>
+                <p className="systems-motto">{featuredNews ? new Intl.DateTimeFormat('es-CO', { day: '2-digit', month: 'short', year: 'numeric', timeZone: 'America/Bogota' }).format(new Date(featuredNews.publishedAt)) : profile?.motto || 'Tecnología · Innovación · Futuro'}</p>
+                <p className="systems-description">{featuredNews?.summary || profile?.description || 'Formamos profesionales capaces de diseñar, desarrollar e innovar soluciones tecnológicas para la sociedad.'}</p>
+                <a className="systems-more" href={featuredNews ? `/carreras/sistemas/noticias?noticia=${encodeURIComponent(featuredNews.id)}` : '#opciones'}>{featuredNews ? 'Leer noticia' : 'Conoce más'} <ChevronRight size={23} /></a>
               </div>
             </div>
             <div className="systems-gallery">

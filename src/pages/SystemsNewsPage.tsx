@@ -14,7 +14,7 @@ import {
   X,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { systemsNews, type SystemsNewsItem } from '../data/systemsNews';
 
 const PAGE_SIZE = 6;
@@ -42,6 +42,7 @@ export default function SystemsNewsPage() {
   const [query, setQuery] = useState('');
   const [page, setPage] = useState(1);
   const [selectedNews, setSelectedNews] = useState<SystemsNewsItem | null>(null);
+  const [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
     const timer = window.setInterval(() => setNow(new Date()), 30_000);
@@ -54,6 +55,19 @@ export default function SystemsNewsPage() {
       setNewsItems(data.items.map((item: SystemsNewsItem) => ({ ...item, date: item.publishedAt ? formatDate(new Date(item.publishedAt)) : '' })));
     }).catch(() => undefined);
   }, []);
+
+  useEffect(() => {
+    const newsId = searchParams.get('noticia');
+    setSelectedNews(newsId ? newsItems.find((item) => String(item.id) === newsId) || null : null);
+  }, [newsItems, searchParams]);
+
+  function openNews(item: SystemsNewsItem) {
+    setSearchParams({ noticia: String(item.id) });
+  }
+
+  function closeNews() {
+    setSearchParams({}, { replace: true });
+  }
 
   const filteredNews = useMemo(() => {
     const normalizedQuery = query.trim().toLocaleLowerCase('es');
@@ -123,7 +137,7 @@ export default function SystemsNewsPage() {
                       </div>
                       <h2>{item.title}</h2>
                       <p>{item.summary}</p>
-                      <button className="systems-news-readmore" onClick={() => setSelectedNews(item)}>
+                      <button className="systems-news-readmore" onClick={() => openNews(item)}>
                         Leer más <ArrowRight size={17} />
                       </button>
                     </div>
@@ -166,9 +180,9 @@ export default function SystemsNewsPage() {
       </div>
 
       {selectedNews && (
-        <div className="systems-news-modal-backdrop" role="presentation" onClick={() => setSelectedNews(null)}>
+        <div className="systems-news-modal-backdrop" role="presentation" onClick={closeNews}>
           <article className="systems-news-modal" role="dialog" aria-modal="true" aria-labelledby="news-modal-title" onClick={(event) => event.stopPropagation()}>
-            <button className="systems-news-modal-close" onClick={() => setSelectedNews(null)} aria-label="Cerrar noticia"><X /></button>
+            <button className="systems-news-modal-close" onClick={closeNews} aria-label="Cerrar noticia"><X /></button>
             <img src={selectedNews.image} alt="" />
             <span className="news-category-chip">{selectedNews.category}</span>
             <h2 id="news-modal-title">{selectedNews.title}</h2>

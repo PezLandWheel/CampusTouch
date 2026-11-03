@@ -130,3 +130,41 @@ input, select, textarea { accent-color: var(--um-royal); }
   #root { height: auto; min-height: 100svh; }
   body { overflow-x: hidden; overflow-y: auto; }
 }
+
+.systems-schedule-reference .systems-schedule-banner-inner { position: relative; justify-content: flex-start; }
+.systems-schedule-reference .systems-schedule-brand { position: absolute; left: 50%; transform: translateX(-50%); }
+.systems-schedule-header-back { min-height: 52px; margin: 0; padding: 13px 18px; border-color: #70c7f2a8; background: #0a3551eF; color: #f2faff; font-size: 15px; font-weight: 750; box-shadow: 0 7px 20px #00101f55; }
+.systems-schedule-header-back svg { width: 20px; height: 20px; }
+.systems-schedule-header-back:hover { background: #10496d; }
+.systems-schedule-reference .systems-schedule-date { margin-left: auto; }
+.systems-schedule-back { min-height: 46px; padding: 10px 15px; font-size: 13px; }
+.systems-schedule-header-back { min-height: 58px; padding: 15px 20px; font-size: 16px; }
+.systems-schedule-expanded .systems-schedule-filters>label { font-size: 12px; }
+.systems-schedule-expanded .systems-schedule-filters select,
+.systems-schedule-expanded .systems-schedule-search-input { height: 50px; padding: 0 14px; font-size: 13px; }
+.systems-schedule-expanded .systems-schedule-search-input input { font-size: 13px; }
+.systems-schedule-expanded .systems-schedule-selected-title { display: grid; grid-template-columns: max-content minmax(0, 1fr); align-items: center; gap: 18px; width: 100%; }
+.systems-schedule-expanded .systems-schedule-selected-title .systems-schedule-title { justify-self: center; text-align: center; }
+.systems-schedule-semester-heading { padding: 18px 5px 22px; }
+.systems-schedule-list-heading-copy .systems-schedule-title { text-align: center; }
+.systems-schedule-semester-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 16px; }
+.systems-schedule-semester-grid .systems-schedule-semester-card { flex: 1 1 260px; max-width: 320px; }
+@media (max-width: 700px) {
+  .systems-schedule-reference .systems-schedule-banner { height: 150px; }
+  .systems-schedule-reference .systems-schedule-banner-inner { display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto auto auto; align-content: center; justify-items: center; gap: 8px; }
+  .systems-schedule-header-back { grid-column: 1; grid-row: 1; justify-self: start; min-height: 40px; margin: 0; padding: 8px 10px; font-size: 11px; }
+  .systems-schedule-reference .systems-schedule-brand { position: static; grid-column: 1; grid-row: 2; transform: none; }
+  .systems-schedule-reference .systems-schedule-date { grid-column: 1; grid-row: 3; justify-self: end; min-width: 110px; margin: 0; }
+  .systems-schedule-semester-heading { align-items: center; flex-direction: column; gap: 10px; padding: 12px 3px 15px; }
+  .systems-schedule-semester-grid { flex-direction: column; align-items: center; }
+  .systems-schedule-semester-grid .systems-schedule-semester-card { width: 100%; max-width: 420px; flex: none; }
+  .systems-schedule-back { min-height: 44px; padding: 10px 13px; font-size: 12px; }
+  .systems-schedule-header-back { min-height: 44px; padding: 9px 12px; font-size: 12px; }
+  .systems-schedule-expanded .systems-schedule-filters>label { font-size: 11px; }
+  .systems-schedule-expanded .systems-schedule-filters select,
+  .systems-schedule-expanded .systems-schedule-search-input { height: 44px; padding: 0 11px; font-size: 12px; }
+  .systems-schedule-expanded .systems-schedule-search-input input { font-size: 12px; }
+  .systems-schedule-expanded .systems-schedule-selected-title { grid-template-columns: 1fr; gap: 10px; }
+  .systems-schedule-expanded .systems-schedule-selected-title .systems-schedule-back { justify-self: start; }
+  .systems-schedule-expanded .systems-schedule-selected-title .systems-schedule-title { justify-self: stretch; text-align: center; }
+}
