@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { ArrowLeft, ArrowRight, Building2, ChevronLeft, ChevronRight } from 'lucide-react';
-import { Link } from 'react-router-dom';
 import { MenuOption } from '../components';
 import { slides, menuOptions } from '../data/systems';
 
@@ -58,7 +57,6 @@ export default function SystemsHomePage() {
       <div className="systems-backdrop" aria-hidden="true" />
       <div className="systems-inner">
         <header className="systems-reference-header">
-          <Link className="systems-return" to="/carreras/sistemas"><ChevronLeft size={22} /> Volver a carreras</Link>
           <div className="systems-institution">
             <span className="systems-seal"><Building2 size={36} /></span>
             <span><small>Universidad</small><strong>Facultad de Ingeniería</strong><em>Conocimiento que construye el futuro</em></span>

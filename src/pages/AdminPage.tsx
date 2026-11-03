@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState, type FormEvent } from 'react';
-import { Activity, ArrowLeft, Check, GraduationCap, Image, LockKeyhole, LogOut, Pencil, Plus, Save, Search, Shield, Trash2, UserRound, X } from 'lucide-react';
+import { Activity, ArrowLeft, Check, GraduationCap, Image, LockKeyhole, LogOut, Pencil, Plus, Save, Search, Settings, Shield, Trash2, Users, UserRound, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 type AuthUser = { id: string; displayName: string; email: string; role: string; careerId: string | null; careerName: string | null };
