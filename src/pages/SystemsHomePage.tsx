@@ -15,9 +15,10 @@ const slideImages = [
 export default function SystemsHomePage() {
   const [slide, setSlide] = useState(0);
   const [gallery, setGallery] = useState<Array<{ title: string; imageUrl: string }>>([]);
+  const [newsSlides, setNewsSlides] = useState<Array<{ id: string; title: string; image: string; publishedAt: string }>>([]);
   const [profile, setProfile] = useState<{ displayName?: string; motto?: string; description?: string; heroImageUrl?: string } | null>(null);
   const [customLinks, setCustomLinks] = useState<Array<{ title: string; url: string; description?: string }>>([]);
-  const visibleSlides = gallery.length ? gallery.map((item) => ({ title: item.title, image: item.imageUrl })) : [...slides];
+  const visibleSlides: Array<{ id?: string; title: string; image: string }> = newsSlides.length ? newsSlides : gallery.length ? gallery.map((item) => ({ title: item.title, image: item.imageUrl })) : [...slides];
   const nextSlide = () => setSlide((current) => (current + 1) % visibleSlides.length);
   const previousSlide = () => setSlide((current) => (current + visibleSlides.length - 1) % visibleSlides.length);
 
@@ -25,11 +26,20 @@ export default function SystemsHomePage() {
     let active = true;
     Promise.all([
       fetch('/api/systems/public?section=gallery').then((response) => response.ok ? response.json() : null),
+      fetch('/api/systems/public?section=news', { cache: 'no-store' }).then((response) => response.ok ? response.json() : null),
       fetch('/api/systems/public?section=profile').then((response) => response.ok ? response.json() : null),
       fetch('/api/systems/public?section=links').then((response) => response.ok ? response.json() : null),
-    ]).then(([galleryResult, profileResult, linksResult]) => {
+    ]).then(([galleryResult, newsResult, profileResult, linksResult]) => {
       if (!active) return;
       if (galleryResult?.items) setGallery(galleryResult.items);
+      if (newsResult?.items) {
+        const latest = [...newsResult.items]
+          .filter((item: { publishedAt?: string | null; image?: string; title?: string }) => item.publishedAt && item.title && item.image)
+          .sort((a: { publishedAt: string }, b: { publishedAt: string }) => Date.parse(b.publishedAt) - Date.parse(a.publishedAt))
+          .slice(0, 4)
+          .map((item: { id: string; title: string; image: string; publishedAt: string }) => ({ id: item.id, title: item.title, image: item.image, publishedAt: item.publishedAt }));
+        setNewsSlides(latest);
+      }
       if (profileResult?.item) setProfile(profileResult.item);
       if (linksResult?.items) setCustomLinks(linksResult.items);
     }).catch(() => undefined);
@@ -58,7 +68,7 @@ export default function SystemsHomePage() {
 
         <div className="systems-reference-content">
           <section className="systems-showcase" aria-label="Ingeniería de Sistemas">
-    <div className="systems-showcase-image" style={{ backgroundImage: `linear-gradient(90deg,rgba(3,12,21,.8),rgba(3,12,21,.08) 82%),linear-gradient(0deg,rgba(2,10,18,.88),transparent 60%),url(${profile?.heroImageUrl || visibleSlides[slide]?.image})` }}>
+    <div className="systems-showcase-image" style={{ backgroundImage: `linear-gradient(90deg,rgba(3,12,21,.8),rgba(3,12,21,.08) 82%),linear-gradient(0deg,rgba(2,10,18,.88),transparent 60%),url(${newsSlides.length ? visibleSlides[slide]?.image : profile?.heroImageUrl || visibleSlides[slide]?.image})` }}>
               <div className="systems-showcase-copy">
                 <span className="systems-blue-rule" />
                 <span className="systems-program-label">Ingeniería de</span>
@@ -72,7 +82,7 @@ export default function SystemsHomePage() {
               <button className="systems-gallery-arrow" onClick={previousSlide} aria-label="Imagen anterior"><ChevronLeft /></button>
               <div className="systems-thumbnails">
                 {visibleSlides.map((item, index) => (
-                  <button key={`${item.title}-${index}`} className={`systems-thumbnail ${slide === index ? 'selected' : ''}`} onClick={() => setSlide(index)} aria-label={`Mostrar ${item.title}`}>
+                  <button key={item.id || `${item.title}-${index}`} className={`systems-thumbnail ${slide === index ? 'selected' : ''}`} onClick={() => setSlide(index)} aria-label={`Mostrar ${item.title}`}>
                     <img src={item.image} alt="" />
                     <span>{item.title}</span>
                   </button>
@@ -81,7 +91,7 @@ export default function SystemsHomePage() {
               <button className="systems-gallery-arrow" onClick={nextSlide} aria-label="Siguiente imagen"><ChevronRight /></button>
             </div>
             <div className="systems-slide-dots" aria-label={`Imagen ${slide + 1} de ${visibleSlides.length}`}>
-              {visibleSlides.map((item, index) => <button key={`${item.title}-${index}`} className={slide === index ? 'selected' : ''} onClick={() => setSlide(index)} aria-label={`Ir a imagen ${index + 1}`} />)}
+              {visibleSlides.map((item, index) => <button key={item.id || `${item.title}-${index}`} className={slide === index ? 'selected' : ''} onClick={() => setSlide(index)} aria-label={`Ir a imagen ${index + 1}`} />)}
             </div>
           </section>
 

@@ -70,3 +70,16 @@ export async function onRequestPatch({ request, env, params }) {
   const career = target.careerId ? await env.DB.prepare('SELECT name FROM careers WHERE id = ?').bind(target.careerId).first() : null;
   return json({ user: { ...target, displayName, email, photoUrl, careerName: career?.name || null, roleName: { SUPER_ADMIN: 'Administrador Principal', CAREER_ADMIN: 'Administrador de Carrera', CONTENT_EDITOR: 'Editor de Contenido', SCHEDULE_MANAGER: 'Gestor de Horarios', TEACHER_MANAGER: 'Gestor de Profesores', CONSULTANT: 'Consultor', USER: 'Usuario' }[target.role] } });
 }
+
+export async function onRequestDelete({ request, env, params }) {
+  if (!isSameOrigin(request)) return json({ error: 'Origen no permitido.' }, 403);
+  const auth = await requirePrincipal(request, env);
+  if (auth.response) return auth.response;
+  if (params.id === auth.user.id) return json({ error: 'No puedes eliminar tu propia cuenta.' }, 403);
+  const target = await env.DB.prepare('SELECT role FROM users WHERE id = ?').bind(params.id).first();
+  if (!target) return json({ error: 'La cuenta no existe.' }, 404);
+  if (target.role === 'SUPER_ADMIN') return json({ error: 'No se puede eliminar la cuenta principal.' }, 403);
+  await env.DB.prepare('DELETE FROM user_sessions WHERE user_id = ?').bind(params.id).run();
+  await env.DB.prepare('DELETE FROM users WHERE id = ?').bind(params.id).run();
+  return json({ ok: true });
+}

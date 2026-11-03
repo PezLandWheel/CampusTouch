@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState, type DragEvent, type FormEvent } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { systemsCurriculum } from '../data/systemsCurriculum';
 import {
   Activity, ArrowRight, Bell, BookOpen, CalendarDays, Check, ChevronDown, ChevronRight, CircleHelp,
   Clock3, FileText, GraduationCap, Image, Link as LinkIcon, LockKeyhole, LogOut, Menu, Plus,
@@ -39,7 +38,7 @@ function canWriteSection(role: string, section: Section) {
   if (section === 'teacherAccounts') return false;
   const write: Record<string, Section[]> = {
     CONTENT_EDITOR: ['news', 'gallery', 'profile', 'links'],
-    SCHEDULE_MANAGER: ['semesters', 'schedules'],
+    SCHEDULE_MANAGER: ['semesters', 'subjects', 'schedules'],
     TEACHER_MANAGER: ['teachers'],
   };
   return Boolean(write[role]?.includes(section));
@@ -78,6 +77,7 @@ export default function SystemsAdminPage({ user }: { user: AdminUser }) {
   const [section, setSectionState] = useState<Section>(initialSection && allSections.includes(initialSection) ? initialSection : 'dashboard');
   const [data, setData] = useState<{ items?: Row[]; accounts?: Row[]; item?: Row; stats?: Record<string, number>; recentNews?: Row[] }>({});
   const [semesters, setSemesters] = useState<Row[]>([]);
+  const [subjects, setSubjects] = useState<Row[]>([]);
   const [teacherOptions, setTeacherOptions] = useState<Row[]>([]);
   const [search, setSearch] = useState('');
   const [collapsed, setCollapsed] = useState(false);
@@ -101,11 +101,6 @@ export default function SystemsAdminPage({ user }: { user: AdminUser }) {
   async function load(target: Section = section) {
     setLoading(true); setError('');
     try {
-      if (target === 'subjects') {
-        const items = Object.entries(systemsCurriculum).flatMap(([semester, courses]) => courses.map((course, index) => ({ id: `${semester}-${index}`, semester: Number(semester), name: course.name, credits: course.credits })));
-        setData({ items });
-        return;
-      }
       const response = await fetch(`/api/systems/manage?section=${target}`);
       const result = await response.json();
       if (!response.ok) throw new Error(result.error || 'No se pudo cargar la información.');
@@ -121,10 +116,19 @@ export default function SystemsAdminPage({ user }: { user: AdminUser }) {
         setData({ ...result, accounts: usersResult.items || [] });
       } else setData(result);
       if (target === 'semesters') setSemesters(result.items || []);
+      if (target === 'subjects') {
+        setSubjects(result.items || []);
+        const semestersResponse = await fetch('/api/systems/manage?section=semesters');
+        const semestersData = await semestersResponse.json();
+        if (semestersResponse.ok) setSemesters(semestersData.items || []);
+      }
       if (target === 'schedules') {
-        const teachersResponse = await fetch('/api/systems/public?section=teachers');
-        const teachersResult = await teachersResponse.json();
+        const [teachersResponse, subjectsResponse] = await Promise.all([
+          fetch('/api/systems/public?section=teachers'), fetch('/api/systems/manage?section=subjects'),
+        ]);
+        const [teachersResult, subjectsResult] = await Promise.all([teachersResponse.json(), subjectsResponse.json()]);
         if (teachersResponse.ok) setTeacherOptions(teachersResult.items || []);
+        if (subjectsResponse.ok) setSubjects(subjectsResult.items || []);
       }
       if (target === 'dashboard' || target === 'schedules') {
         const semestersResponse = await fetch('/api/systems/manage?section=semesters');
@@ -152,7 +156,7 @@ export default function SystemsAdminPage({ user }: { user: AdminUser }) {
 
   function fieldsFor(target: Section): Field[] {
     const selectedSemesterNumber = semesters.find((item) => item.id === form.semesterId)?.number || 0;
-    const subjectOptions = (systemsCurriculum[selectedSemesterNumber] || []).map((item) => ({ value: item.name, label: `${item.name} · ${item.credits} cr.` }));
+    const subjectOptions = subjects.filter((item) => Number(item.semester) === Number(selectedSemesterNumber)).map((item) => ({ value: item.name, label: `${item.name} · ${item.credits} cr.` }));
     if (form.subject && !subjectOptions.some((item) => item.value === form.subject)) subjectOptions.unshift({ value: form.subject, label: `${form.subject} (actual)` });
     if (target === 'news') return [
       { key: 'title', label: 'Título', required: true, wide: true, placeholder: 'Título de la noticia' },
@@ -169,6 +173,11 @@ export default function SystemsAdminPage({ user }: { user: AdminUser }) {
     if (target === 'semesters') return [
       { key: 'number', label: 'Número de semestre', type: 'number', required: true, min: 1, max: 9 },
       { key: 'academicPeriod', label: 'Periodo académico', required: true, placeholder: '2026-1' }, { key: 'name', label: 'Nombre', required: true, wide: true, placeholder: 'Primer semestre' },
+    ];
+    if (target === 'subjects') return [
+      { key: 'name', label: 'Nombre de la materia', required: true, wide: true },
+      { key: 'semester', label: 'Semestre', type: 'select', required: true, options: Array.from({ length: 9 }, (_, index) => ({ value: String(index + 1), label: `${index + 1}.° semestre` })) },
+      { key: 'credits', label: 'Créditos', type: 'number', required: true, min: 1, max: 30 },
     ];
     if (target === 'schedules') return [
       { key: 'semesterId', label: 'Semestre', type: 'select', required: true, options: semesters.map((item) => ({ value: item.id, label: `${item.number}.° · ${item.name} · ${item.academicPeriod}` })) },
@@ -200,7 +209,7 @@ export default function SystemsAdminPage({ user }: { user: AdminUser }) {
   }
 
   function openCreate(target: Section = section) {
-    const defaults: Record<string, string> = { status: 'DRAFT', category: 'ACADEMIA', imageUrl: '/images/systems-lab.png', heroImageUrl: '/images/systems-lab.png', photoUrl: '', scheduleType: 'CLASS', weekday: '1', number: '1', academicPeriod: '2026-2', role: 'CAREER_ADMIN', contactEmail: '' };
+    const defaults: Record<string, string> = { status: 'DRAFT', category: 'ACADEMIA', imageUrl: '/images/systems-lab.png', heroImageUrl: '/images/systems-lab.png', photoUrl: '', scheduleType: 'CLASS', weekday: '1', number: '1', semester: String(semesters[0]?.number || 1), credits: '1', academicPeriod: '2026-2', role: 'CAREER_ADMIN', contactEmail: '' };
     setSection(target); setEditRow(null); setForm(Object.fromEntries(fieldsFor(target).map((field) => [field.key, defaults[field.key] || '']))); setDialog(true);
   }
 
@@ -288,7 +297,7 @@ export default function SystemsAdminPage({ user }: { user: AdminUser }) {
     if (section === 'news') return <div className="systems-admin-table-wrap"><table className="systems-admin-table"><thead><tr><th>Noticia</th><th>Categoría</th><th>Estado</th><th>Actualización</th><th>Acciones</th></tr></thead><tbody>{items.map((item) => <tr key={item.id}><td><span className="systems-admin-article"><img src={item.imageUrl} alt="" /><span><strong>{item.title}</strong><small>{item.summary}</small></span></span></td><td><span className="systems-admin-chip">{item.category}</span></td><td><span className={`systems-admin-status ${item.status === 'PUBLISHED' ? 'published' : 'draft'}`}>{item.status === 'PUBLISHED' ? 'Publicada' : 'Borrador'}</span></td><td>{formatDate(item.updatedAt)}</td><td><RowActions disabled={!canEdit} onEdit={() => openEdit(item)} onDelete={() => deleteItem(item)} /></td></tr>)}</tbody></table></div>;
     if (section === 'gallery') return <div className="systems-admin-gallery-grid">{items.map((item) => <article className={`systems-admin-gallery-card ${item.active ? '' : 'is-inactive'}`} key={item.id}><img src={item.imageUrl} alt={item.title} /><div><span className="systems-admin-chip">{item.category}</span><strong>{item.title}</strong><small>{item.description}</small><RowActions disabled={!canEdit} onEdit={() => openEdit(item)} onDelete={() => deleteItem(item)} /></div></article>)}</div>;
     if (section === 'semesters') return <div className="systems-admin-table-wrap"><table className="systems-admin-table"><thead><tr><th>Semestre</th><th>Periodo académico</th><th>Estado</th><th>Acciones</th></tr></thead><tbody>{items.map((item) => <tr key={item.id}><td><strong>{item.number}.° · {item.name}</strong></td><td>{item.academicPeriod}</td><td><ActiveBadge active={item.active} /></td><td><RowActions disabled={!canEdit} onEdit={() => openEdit(item)} onToggle={() => toggleActive(item)} active={item.active} onDelete={() => deleteItem(item)} /></td></tr>)}</tbody></table></div>;
-    if (section === 'subjects') return <div className="systems-admin-table-wrap"><table className="systems-admin-table"><thead><tr><th>Materia</th><th>Semestre</th><th>Créditos</th></tr></thead><tbody>{items.map((item) => <tr key={item.id}><td><strong>{item.name}</strong></td><td>{item.semester}.° semestre</td><td>{item.credits}</td></tr>)}</tbody></table></div>;
+    if (section === 'subjects') return <div className="systems-admin-table-wrap"><table className="systems-admin-table"><thead><tr><th>Materia</th><th>Semestre</th><th>Créditos</th><th>Acciones</th></tr></thead><tbody>{items.map((item) => <tr key={item.id}><td><strong>{item.name}</strong></td><td>{item.semester}.° semestre</td><td>{item.credits}</td><td><RowActions disabled={!canEdit} onEdit={() => openEdit(item)} onDelete={() => deleteItem(item)} /></td></tr>)}</tbody></table></div>;
     if (section === 'schedules') return <div className="systems-admin-table-wrap"><table className="systems-admin-table"><thead><tr><th>Materia</th><th>Semestre</th><th>Día y hora</th><th>Profesor</th><th>Salón</th><th>Acciones</th></tr></thead><tbody>{items.map((item) => <tr key={item.id}><td><strong>{item.subject}</strong><small className="systems-admin-subcell">{item.scheduleType === 'CLASS' ? 'Clase' : item.scheduleType === 'ADVISORY' ? 'Asesoría' : 'Atención docente'}</small></td><td>{item.semester} <small className="systems-admin-subcell">{item.academicPeriod}</small></td><td>{weekdays[item.weekday]}<small className="systems-admin-subcell">{item.startTime}–{item.endTime}</small></td><td>{item.teacherName || 'Por asignar'}</td><td>{item.classroom || '—'}</td><td><RowActions disabled={!canEdit} onEdit={() => openEdit(item)} onToggle={() => toggleActive(item)} active={item.active} onDelete={() => deleteItem(item)} /></td></tr>)}</tbody></table></div>;
     if (section === 'teacherAccounts') return <div className="systems-admin-table-wrap"><table className="systems-admin-table"><thead><tr><th>Profesor</th><th>Correo institucional</th><th>Cuenta asociada</th><th>Rol</th><th>Estado</th></tr></thead><tbody>{items.map((item) => <tr key={item.id}><td><span className="systems-admin-person">{item.photoUrl ? <img src={item.photoUrl} alt="" /> : <span><UserRound size={18} /></span>}<strong>{item.displayName}</strong></span></td><td>{item.email || '—'}</td><td><select className="systems-admin-account-select" value={item.accountUserId || ''} disabled={!canEdit || accountBusyId === item.id} onChange={(event) => void assignTeacherAccount(item, event.target.value)}><option value="">Sin cuenta vinculada</option>{(data.accounts || []).filter((account) => account.role !== 'USER' && (account.role !== 'CAREER_ADMIN' || item.accountUserId === account.id) && (account.active || item.accountUserId === account.id)).map((account) => <option key={account.id} value={account.id}>{account.displayName} · {account.email}</option>)}</select></td><td>{item.accountRoleName || '—'}</td><td>{item.accountUserId ? <ActiveBadge active={item.accountActive} label={item.accountActive ? 'Activa' : 'Inactiva'} /> : '—'}</td></tr>)}</tbody></table></div>;
     if (section === 'teachers') return <div className="systems-admin-table-wrap"><table className="systems-admin-table"><thead><tr><th>Profesor</th><th>Especialidad</th><th>Contacto</th><th>Atención / oficina</th><th>Estado</th><th>Acciones</th></tr></thead><tbody>{items.map((item) => <tr key={item.id}><td><span className="systems-admin-person">{item.photoUrl ? <img src={item.photoUrl} alt="" /> : <span><UserRound size={18} /></span>}<strong>{item.displayName}</strong></span></td><td>{item.specialty || '—'}</td><td>{item.email || '—'}</td><td>{item.officeHours || item.office || '—'}</td><td><ActiveBadge active={item.active} /></td><td><RowActions disabled={!canEdit} onEdit={() => openEdit(item)} onToggle={() => toggleActive(item)} active={item.active} onDelete={() => deleteItem(item)} /></td></tr>)}</tbody></table></div>;
@@ -338,7 +347,7 @@ export default function SystemsAdminPage({ user }: { user: AdminUser }) {
     </nav><div className="systems-admin-sidebar-campus"><span>Facultad de Ingeniería<br /><small>Universidad Mariana</small></span><small>Conocimiento que construye el futuro</small></div></aside>
     <section className="systems-admin-workspace"><header className="systems-admin-topbar"><button className="systems-admin-menu-button" onClick={() => setCollapsed((value) => !value)} aria-label="Contraer menú"><Menu size={21} /></button><div className="systems-admin-topbar-title"><strong>Facultad de Ingeniería</strong><span>Panel de Administración · Ingeniería de Sistemas</span></div><label className="systems-admin-search"><Search size={17} /><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Buscar en Sistemas..." /></label><button className="systems-admin-icon-button" aria-label="Notificaciones"><Bell size={19} /></button><button className="systems-admin-user-menu" onClick={logout}><span className="systems-admin-user-avatar">{user.displayName.split(/\s+/).map((part) => part[0]).slice(0,2).join('').toUpperCase()}</span><span><strong>{user.displayName}</strong><small>{user.roleName || 'Administrador'}</small></span><ChevronDown size={16} /></button></header>
       <div className="systems-admin-main"><div className="systems-admin-page-heading"><div><h1>{section === 'dashboard' ? 'Bienvenido al Panel de Administración' : sectionTitles[section]}</h1><p>{section === 'dashboard' ? 'Gestiona el contenido de CampusTouch de Ingeniería de Sistemas' : descriptions[section]}</p></div><div className="systems-admin-date"><CalendarDays size={19} /><span>{new Intl.DateTimeFormat('es-CO',{weekday:'long',day:'2-digit',month:'long',year:'numeric',timeZone:'America/Bogota'}).format(new Date())}<strong>{new Intl.DateTimeFormat('es-CO',{hour:'2-digit',minute:'2-digit',hour12:false,timeZone:'America/Bogota'}).format(new Date())}</strong></span></div></div>
-        {section === 'dashboard' ? renderDashboard() : section === 'profile' ? <ProfileSection item={data.item} loading={loading} onEdit={() => { setEditRow(data.item || null); setForm(Object.fromEntries(fieldsFor('profile').map((field) => [field.key, data.item?.[field.key] ?? '']))); setDialog(true); }} /> : section === 'roles' ? <RolesSection accounts={data.accounts || []} canAssign={user.role === 'SUPER_ADMIN' || user.role === 'CAREER_ADMIN'} busyId={roleBusyId} dragId={dragUserId} onDragStart={(id) => setDragUserId(id)} onDragEnd={() => setDragUserId('')} onDropRole={assignRole} /> : <section className="systems-admin-card systems-admin-module"><header className="systems-admin-card-header"><span className="systems-admin-heading-icon blue">{(() => { const Icon = nav.find((item) => item.key === section)?.icon || FileText; return <Icon size={21} />; })()}</span><div><h2>{sectionTitles[section]}</h2><p>{section === 'news' ? `${visibleItems.length} noticias · publica o guarda borradores` : `${visibleItems.length} registros en Ingeniería de Sistemas`}</p></div>{canWriteSection(user.role, section) && section !== 'teacherAccounts' && section !== 'subjects' && <button className="systems-admin-primary small" onClick={() => openCreate()}><Plus size={16} />{section === 'news' ? 'Nueva noticia' : section === 'users' ? 'Nueva cuenta' : 'Agregar'}</button>}</header>{error && <div className="systems-admin-error-inline">{error}</div>}{renderTable()}</section>}
+        {section === 'dashboard' ? renderDashboard() : section === 'profile' ? <ProfileSection item={data.item} loading={loading} onEdit={() => { setEditRow(data.item || null); setForm(Object.fromEntries(fieldsFor('profile').map((field) => [field.key, data.item?.[field.key] ?? '']))); setDialog(true); }} /> : section === 'roles' ? <RolesSection accounts={data.accounts || []} canAssign={user.role === 'SUPER_ADMIN' || user.role === 'CAREER_ADMIN'} busyId={roleBusyId} dragId={dragUserId} onDragStart={(id) => setDragUserId(id)} onDragEnd={() => setDragUserId('')} onDropRole={assignRole} /> : <section className="systems-admin-card systems-admin-module"><header className="systems-admin-card-header"><span className="systems-admin-heading-icon blue">{(() => { const Icon = nav.find((item) => item.key === section)?.icon || FileText; return <Icon size={21} />; })()}</span><div><h2>{sectionTitles[section]}</h2><p>{section === 'news' ? `${visibleItems.length} noticias · publica o guarda borradores` : `${visibleItems.length} registros en Ingeniería de Sistemas`}</p></div>{canWriteSection(user.role, section) && section !== 'teacherAccounts' && <button className="systems-admin-primary small" onClick={() => openCreate()}><Plus size={16} />{section === 'news' ? 'Nueva noticia' : section === 'users' ? 'Nueva cuenta' : section === 'subjects' ? 'Nueva materia' : 'Agregar'}</button>}</header>{error && <div className="systems-admin-error-inline">{error}</div>}{renderTable()}</section>}
       </div>
     </section>
     {(notice || (error && section === 'dashboard')) && <div className={`systems-admin-toast ${error ? 'error' : ''}`} role="status">{error ? <X size={17} /> : <Check size={17} />}{error || notice}<button onClick={() => { setNotice(''); setError(''); }} aria-label="Cerrar aviso"><X size={15} /></button></div>}
@@ -348,10 +357,10 @@ export default function SystemsAdminPage({ user }: { user: AdminUser }) {
 
 const descriptions: Record<Section, string> = {
   dashboard: 'Resumen general de Ingeniería de Sistemas.', news: 'Redacta, publica y organiza las noticias que ve la comunidad.', gallery: 'Administra imágenes para la página de Ingeniería de Sistemas.',
-  profile: 'Actualiza los datos, el lema y la presentación pública de la carrera.', semesters: 'Organiza los periodos académicos y semestres activos.', subjects: 'Consulta las materias y créditos oficiales del plan de estudios, organizados por semestre.', schedules: 'Registra horarios de materias, atención y asesorías de lunes a viernes por semestre.',
+  profile: 'Actualiza los datos, el lema y la presentación pública de la carrera.', semesters: 'Organiza los periodos académicos y semestres activos.', subjects: 'Administra las materias y créditos del plan de estudios.', schedules: 'Registra horarios de materias, atención y asesorías de lunes a viernes por semestre.',
   teachers: 'Administra la información de profesores y sus horarios de atención.', teacherAccounts: 'Consulta todos los profesores y vincula sus cuentas de CampusTouch.', links: 'Mantén los enlaces útiles de la página de Sistemas.', users: 'Crea cuentas para esta carrera y habilita o revoca su acceso.', roles: 'Consulta los roles disponibles para las cuentas de la carrera.',
 };
-const singular: Partial<Record<Section, string>> = { news: 'noticia', gallery: 'imagen', semesters: 'semestre', schedules: 'horario', teachers: 'profesor', links: 'enlace', users: 'cuenta' };
+const singular: Partial<Record<Section, string>> = { news: 'noticia', gallery: 'imagen', semesters: 'semestre', subjects: 'materia', schedules: 'horario', teachers: 'profesor', links: 'enlace', users: 'cuenta' };
 
 function StatCard({ icon: Icon, value, label, detail, tint }: { icon: typeof FileText; value: string | number; label: string; detail: string; tint: string }) {
   return <article className="systems-admin-stat"><span className={`systems-admin-stat-icon ${tint}`}><Icon size={27} /></span><span><strong>{value}</strong><b>{label}</b><small>{detail}</small></span></article>;

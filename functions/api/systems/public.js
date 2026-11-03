@@ -5,7 +5,7 @@ export async function onRequestGet({ request, env }) {
   const section = new URL(request.url).searchParams.get('section') || 'news';
   if (section === 'news') {
     const result = await env.DB.prepare(`SELECT id, category, title, summary, body, image_url AS image, published_at AS publishedAt
-      FROM systems_news WHERE career_id=? AND status='PUBLISHED' ORDER BY published_at DESC`).bind(CAREER).all();
+      FROM systems_news WHERE career_id=? AND status='PUBLISHED' ORDER BY julianday(published_at) DESC, created_at DESC, id DESC`).bind(CAREER).all();
     return json({ items: result.results });
   }
   if (section === 'semesters') {

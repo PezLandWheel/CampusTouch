@@ -67,6 +67,21 @@ export async function onRequestPatch({ request, env, params }) {
     }
     return json({ ok: true });
   }
+  if (section === 'subjects') {
+    const item = values(data, ['name']); const semester = Number(data.semester); const credits = Number(data.credits);
+    const prior = await env.DB.prepare('SELECT semester_number AS semester, name FROM systems_subjects WHERE id=? AND career_id=?').bind(id, CAREER).first();
+    if (!prior) return json({ error: 'La materia no existe.' }, 404);
+    if (!required(item.name) || !Number.isInteger(semester) || semester < 1 || semester > 9 || !Number.isInteger(credits) || credits < 1 || credits > 30) return json({ error: 'Ingresa el nombre, un semestre entre 1 y 9 y créditos entre 1 y 30.' }, 400);
+    const duplicate = await env.DB.prepare('SELECT id FROM systems_subjects WHERE career_id=? AND semester_number=? AND name=? COLLATE NOCASE AND id<>? LIMIT 1').bind(CAREER, semester, item.name, id).first();
+    if (duplicate) return json({ error: 'Ya existe una materia con ese nombre en el semestre seleccionado.' }, 409);
+    if (semester !== prior.semester) {
+      const used = await env.DB.prepare(`SELECT id FROM systems_schedules WHERE career_id=? AND subject=? AND semester_id IN (SELECT id FROM systems_semesters WHERE career_id=? AND number=?) LIMIT 1`).bind(CAREER, prior.name, CAREER, prior.semester).first();
+      if (used) return json({ error: 'No se puede cambiar el semestre: hay horarios asociados a esta materia. Reasígnalos primero.' }, 409);
+    }
+    await env.DB.prepare('UPDATE systems_subjects SET semester_number=?,name=?,credits=?,updated_at=? WHERE id=? AND career_id=?').bind(semester, item.name, credits, now, id, CAREER).run();
+    if (item.name !== prior.name) await env.DB.prepare(`UPDATE systems_schedules SET subject=?,updated_at=? WHERE career_id=? AND subject=? AND semester_id IN (SELECT id FROM systems_semesters WHERE career_id=? AND number=?)`).bind(item.name, now, CAREER, prior.name, CAREER, prior.semester).run();
+    return json({ ok: true });
+  }
   const activeTables = { schedules: 'systems_schedules', teachers: 'systems_teachers', gallery: 'systems_gallery', links: 'systems_links' };
   if (Object.hasOwn(activeTables, section) && typeof data.active === 'boolean') {
     const table = activeTables[section];
@@ -104,8 +119,14 @@ export async function onRequestDelete({ request, env, params }) {
   if (!isSameOrigin(request)) return json({ error: 'Origen no permitido.' }, 403);
   const auth = await requireSystemsAdmin(request, env); if (auth.response) return auth.response;
   if (!canAccessSystemsSection(auth.user.role, params.section, true)) return json({ error: 'Tu rol no tiene permiso para eliminar registros de esta sección.' }, 403);
-  const tables = { news: 'systems_news', semesters: 'systems_semesters', schedules: 'systems_schedules', teachers: 'systems_teachers', gallery: 'systems_gallery', links: 'systems_links' };
+  const tables = { news: 'systems_news', semesters: 'systems_semesters', subjects: 'systems_subjects', schedules: 'systems_schedules', teachers: 'systems_teachers', gallery: 'systems_gallery', links: 'systems_links' };
   const table = tables[params.section]; if (!table) return json({ error: 'No se puede eliminar este registro.' }, 400);
+  if (params.section === 'subjects') {
+    const subject = await env.DB.prepare('SELECT semester_number AS semester, name FROM systems_subjects WHERE id=? AND career_id=?').bind(params.id, CAREER).first();
+    if (!subject) return json({ error: 'La materia no existe.' }, 404);
+    const used = await env.DB.prepare(`SELECT id FROM systems_schedules WHERE career_id=? AND subject=? AND semester_id IN (SELECT id FROM systems_semesters WHERE career_id=? AND number=?) LIMIT 1`).bind(CAREER, subject.name, CAREER, subject.semester).first();
+    if (used) return json({ error: 'No se puede eliminar: hay horarios asociados a esta materia. Reasígnalos o elimínalos primero.' }, 409);
+  }
   const news = params.section === 'news' ? await env.DB.prepare('SELECT image_url AS imageUrl FROM systems_news WHERE id=? AND career_id=?').bind(params.id, CAREER).first() : null;
   if (params.section === 'news' && !news) return json({ error: 'La noticia no existe.' }, 404);
   try { await env.DB.prepare(`DELETE FROM ${table} WHERE id=? AND career_id=?`).bind(params.id, CAREER).run(); }

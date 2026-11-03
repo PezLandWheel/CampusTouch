@@ -132,7 +132,7 @@ export async function requireSystemsAdmin(request, env) {
 
 const systemsRoleAccess = {
   CONTENT_EDITOR: { read: ['dashboard', 'news', 'gallery', 'profile', 'links'], write: ['news', 'gallery', 'profile', 'links'] },
-  SCHEDULE_MANAGER: { read: ['dashboard', 'semesters', 'schedules'], write: ['semesters', 'schedules'] },
+  SCHEDULE_MANAGER: { read: ['dashboard', 'semesters', 'subjects', 'schedules'], write: ['semesters', 'subjects', 'schedules'] },
   TEACHER_MANAGER: { read: ['dashboard', 'teachers'], write: ['teachers'] },
   CONSULTANT: { read: ['dashboard', 'news', 'gallery', 'profile', 'semesters', 'schedules', 'teachers', 'links'], write: [] }
 };

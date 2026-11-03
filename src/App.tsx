@@ -42,9 +42,8 @@ function CareerAdminRoute() {
   }, []);
   if (state.loading) return <div className="route-loading">Verificando sesión…</div>;
   if (!state.user) return <Navigate to="/login" replace />;
-  if (state.user.role === 'SUPER_ADMIN') return <Navigate to="/admin" replace />;
   if (state.user.role === 'USER') return <Navigate to="/" replace />;
-  if (state.user.careerId === 'ingenieria-sistemas') return <SystemsAdminPage user={state.user} />;
+  if (state.user.role === 'SUPER_ADMIN' || state.user.careerId === 'ingenieria-sistemas') return <SystemsAdminPage user={state.user} />;
   return <main className="career-admin-future"><span><GraduationCap size={27} /></span><p>CampusTouch · Administración</p><h1>Hola, {state.user.displayName}</h1><h2>{state.user.careerName || 'Administración de carrera'}</h2><p>Tu cuenta tiene el rol de {state.user.roleName || 'administrador de carrera'}. El panel para esta carrera se habilitará en una siguiente etapa.</p><button onClick={async () => { await fetch('/api/auth/logout', { method: 'POST' }); window.location.assign('/login'); }}>Cerrar sesión</button></main>;
 }
 

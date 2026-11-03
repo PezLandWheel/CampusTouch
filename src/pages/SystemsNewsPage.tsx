@@ -50,7 +50,7 @@ export default function SystemsNewsPage() {
 
   useEffect(() => {
     fetch('/api/systems/public?section=news').then(async (response) => response.ok ? response.json() : null).then((data) => {
-      if (!data?.items?.length) return;
+      if (!data?.items) return;
       setNewsItems(data.items.map((item: SystemsNewsItem) => ({ ...item, date: item.publishedAt ? formatDate(new Date(item.publishedAt)) : '' })));
     }).catch(() => undefined);
   }, []);

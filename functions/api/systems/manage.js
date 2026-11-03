@@ -3,7 +3,7 @@ import { newsImageKey } from '../../_shared/news-images.js';
 
 const CAREER = 'ingenieria-sistemas';
 const roles = new Set(['CAREER_ADMIN', 'CONTENT_EDITOR', 'SCHEDULE_MANAGER', 'TEACHER_MANAGER', 'CONSULTANT', 'USER']);
-const allowedSections = new Set(['dashboard', 'news', 'gallery', 'semesters', 'schedules', 'teachers', 'teacherAccounts', 'links', 'profile', 'users', 'roles']);
+const allowedSections = new Set(['dashboard', 'news', 'gallery', 'semesters', 'subjects', 'schedules', 'teachers', 'teacherAccounts', 'links', 'profile', 'users', 'roles']);
 const values = (body, keys) => Object.fromEntries(keys.map((key) => [key, cleanText(body[key], key === 'body' || key === 'description' ? 5000 : 500)]));
 const required = (...items) => items.every((item) => item && item.trim().length > 0);
 const validImage = (value) => value.startsWith('/images/') || /^https:\/\//i.test(value);
@@ -30,6 +30,10 @@ async function listSection(env, section) {
   if (section === 'semesters') {
     const result = await env.DB.prepare('SELECT id, number, name, academic_period AS academicPeriod, is_active AS active FROM systems_semesters WHERE career_id = ? ORDER BY academic_period DESC, number').bind(CAREER).all();
     return { items: result.results.map((item) => ({ ...item, active: item.active === 1 })) };
+  }
+  if (section === 'subjects') {
+    const result = await env.DB.prepare('SELECT id, semester_number AS semester, name, credits FROM systems_subjects WHERE career_id = ? ORDER BY semester_number, name COLLATE NOCASE').bind(CAREER).all();
+    return { items: result.results };
   }
   if (section === 'schedules') {
     const result = await env.DB.prepare(`SELECT s.id, s.semester_id AS semesterId, m.name AS semester, m.academic_period AS academicPeriod,
@@ -99,6 +103,11 @@ export async function onRequestPost({ request, env }) {
       if (!required(item.name, item.academicPeriod) || !Number.isInteger(number) || number < 1 || number > 9) return json({ error: 'Ingresa un número de semestre, periodo y nombre válidos.' }, 400);
       await env.DB.prepare(`INSERT INTO systems_semesters (id, career_id, number, name, academic_period, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)`)
         .bind(id, CAREER, number, item.name, item.academicPeriod, now, now).run();
+    } else if (section === 'subjects') {
+      const item = values(data, ['name']); const semester = Number(data.semester); const credits = Number(data.credits);
+      if (!required(item.name) || !Number.isInteger(semester) || semester < 1 || semester > 9 || !Number.isInteger(credits) || credits < 1 || credits > 30) return json({ error: 'Ingresa el nombre, un semestre entre 1 y 9 y créditos entre 1 y 30.' }, 400);
+      await env.DB.prepare('INSERT INTO systems_subjects (id, career_id, semester_number, name, credits, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)')
+        .bind(id, CAREER, semester, item.name, credits, now, now).run();
     } else if (section === 'schedules') {
       const item = values(data, ['semesterId', 'subject', 'teacherName', 'startTime', 'endTime', 'classroom', 'scheduleType']); const weekday = Number(data.weekday);
       const semester = await env.DB.prepare('SELECT id FROM systems_semesters WHERE id = ? AND career_id = ? AND is_active = 1').bind(item.semesterId, CAREER).first();
