@@ -1,4 +1,6 @@
-import { cleanText, hashPassword, isSameOrigin, json, passwordIsStrong, readJson, requirePrincipal, validEmail } from '../../../_shared/auth.js';
+import { cleanText, hashPassword, isSameOrigin, json, passwordIsStrong, readJson, requirePrincipal, roleNames, validEmail } from '../../../_shared/auth.js';
+
+const assignableRoles = new Set(['CAREER_ADMIN', 'CONTENT_EDITOR', 'SCHEDULE_MANAGER', 'TEACHER_MANAGER', 'CONSULTANT', 'USER']);
 
 function cookieToken(request) {
   const cookies = request.headers.get('cookie') || '';
@@ -35,6 +37,18 @@ export async function onRequestPatch({ request, env, params }) {
     FROM users WHERE id = ?`).bind(params.id).first();
   if (!target) return json({ error: 'La cuenta no existe.' }, 404);
   const now = new Date().toISOString();
+
+  if (typeof body.role === 'string') {
+    if (target.role === 'SUPER_ADMIN') return json({ error: 'La cuenta principal no se puede modificar desde Roles de acceso.' }, 403);
+    if (!assignableRoles.has(body.role)) return json({ error: 'El rol seleccionado no es vÃ¡lido.' }, 400);
+    const careerId = body.role === 'USER' ? null : cleanText(body.careerId || target.careerId, 80);
+    if (body.role !== 'USER' && !careerId) return json({ error: 'Selecciona una carrera para este rol.' }, 400);
+    if (careerId && !await env.DB.prepare('SELECT id FROM careers WHERE id = ? AND is_active = 1').bind(careerId).first()) return json({ error: 'La carrera seleccionada no existe o estÃ¡ inactiva.' }, 400);
+    await env.DB.prepare('UPDATE users SET role = ?, career_id = ?, updated_at = ? WHERE id = ?').bind(body.role, careerId, now, params.id).run();
+    await env.DB.prepare('DELETE FROM user_sessions WHERE user_id = ?').bind(params.id).run();
+    const career = careerId ? await env.DB.prepare('SELECT name FROM careers WHERE id = ?').bind(careerId).first() : null;
+    return json({ ok: true, role: body.role, roleName: roleNames[body.role], careerId, careerName: career?.name || null });
+  }
 
   if (typeof body.active === 'boolean') {
     if (target.role === 'SUPER_ADMIN') return json({ error: 'La cuenta principal no se puede desactivar desde este panel.' }, 403);

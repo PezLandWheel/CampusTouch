@@ -10,7 +10,7 @@ const validImage = (value) => value.startsWith('/images/') || /^https:\/\//i.tes
 const validNewsImage = (value) => validImage(value) || Boolean(newsImageKey(value));
 const validUrl = (value) => /^https:\/\//i.test(value);
 
-async function listSection(env, section) {
+async function listSection(env, section, role) {
   if (section === 'dashboard') {
     const [news, published, semesters, schedules, teachers, users, recentNews] = await Promise.all([
       env.DB.prepare('SELECT COUNT(*) AS count FROM systems_news WHERE career_id = ?').bind(CAREER).first(),
@@ -65,8 +65,11 @@ async function listSection(env, section) {
     return { item: await env.DB.prepare('SELECT career_id AS careerId, display_name AS displayName, motto, description, contact_email AS contactEmail, hero_image_url AS heroImageUrl FROM systems_profile WHERE career_id = ?').bind(CAREER).first() };
   }
   if (section === 'users') {
-    const result = await env.DB.prepare(`SELECT id, display_name AS displayName, email, role, career_id AS careerId, is_active AS active, created_at AS createdAt
-      FROM users WHERE career_id = ? ORDER BY created_at DESC`).bind(CAREER).all();
+    const result = role === 'SUPER_ADMIN'
+      ? await env.DB.prepare(`SELECT u.id, u.display_name AS displayName, u.email, u.role, u.career_id AS careerId, c.name AS careerName, u.is_active AS active, u.created_at AS createdAt
+        FROM users u LEFT JOIN careers c ON c.id = u.career_id ORDER BY u.created_at DESC`).all()
+      : await env.DB.prepare(`SELECT id, display_name AS displayName, email, role, career_id AS careerId, is_active AS active, created_at AS createdAt
+        FROM users WHERE career_id = ? ORDER BY created_at DESC`).bind(CAREER).all();
     return { items: result.results.map((item) => ({ ...item, active: item.active === 1, roleName: roleNames[item.role] })) };
   }
   if (section === 'roles') return { items: [...roles].map((role) => ({ id: role, role, roleName: roleNames[role] })) };
@@ -79,7 +82,7 @@ export async function onRequestGet({ request, env }) {
   const section = new URL(request.url).searchParams.get('section') || 'dashboard';
   if (!allowedSections.has(section)) return json({ error: 'Sección no disponible.' }, 400);
   if (!canAccessSystemsSection(auth.user.role, section)) return json({ error: 'Tu rol no tiene permiso para consultar esta sección.' }, 403);
-  return json(await listSection(env, section));
+  return json(await listSection(env, section, auth.user.role));
 }
 
 export async function onRequestPost({ request, env }) {
@@ -148,6 +151,6 @@ export async function onRequestPost({ request, env }) {
     if (String(error).includes('UNIQUE')) return json({ error: 'Ya existe una cuenta o registro con esos datos.' }, 409);
     throw error;
   }
-  const refreshed = await listSection(env, section);
+  const refreshed = await listSection(env, section, auth.user.role);
   return json({ ok: true, ...refreshed }, 201);
 }

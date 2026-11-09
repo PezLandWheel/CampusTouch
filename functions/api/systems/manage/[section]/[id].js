@@ -17,17 +17,20 @@ export async function onRequestPatch({ request, env, params }) {
   if (!canAccessSystemsSection(auth.user.role, section, true)) return json({ error: 'Tu rol no tiene permiso para modificar esta sección.' }, 403);
   const now = new Date().toISOString();
   if (section === 'users') {
+    const globalAdmin = auth.user.role === 'SUPER_ADMIN';
+    const scopeSql = globalAdmin ? '' : ' AND career_id = ?';
     if (typeof data.role === 'string') {
       if (!roleSet.has(data.role)) return json({ error: 'El rol seleccionado no es válido.' }, 400);
-      const target = await env.DB.prepare('SELECT id FROM users WHERE id = ? AND career_id = ? AND role <> ?').bind(id, CAREER, 'SUPER_ADMIN').first();
+      const target = await env.DB.prepare('SELECT id, role FROM users WHERE id = ?' + scopeSql + ' AND role <> ?').bind(...(globalAdmin ? [id, 'SUPER_ADMIN'] : [id, CAREER, 'SUPER_ADMIN'])).first();
       if (!target) return json({ error: 'La cuenta no existe o no pertenece a Ingeniería de Sistemas.' }, 404);
-      await env.DB.prepare('UPDATE users SET role = ?, updated_at = ? WHERE id = ? AND career_id = ?').bind(data.role, now, id, CAREER).run();
+      if (!globalAdmin && (target.role === 'CAREER_ADMIN' || data.role === 'CAREER_ADMIN')) return json({ error: 'Solo el super admin puede asignar o quitar el rol Administrador de Carrera.' }, 403);
+      await env.DB.prepare('UPDATE users SET role = ?, updated_at = ? WHERE id = ?' + scopeSql).bind(...(globalAdmin ? [data.role, now, id] : [data.role, now, id, CAREER])).run();
       return json({ ok: true, role: data.role });
     }
     if (typeof data.active !== 'boolean') return json({ error: 'Estado no válido.' }, 400);
-    const target = await env.DB.prepare('SELECT role FROM users WHERE id = ? AND career_id = ?').bind(id, CAREER).first();
+    const target = await env.DB.prepare('SELECT role FROM users WHERE id = ?' + scopeSql).bind(...(globalAdmin ? [id] : [id, CAREER])).first();
     if (!target || target.role === 'SUPER_ADMIN') return json({ error: 'La cuenta no existe o no se puede modificar.' }, 404);
-    await env.DB.prepare('UPDATE users SET is_active = ?, updated_at = ? WHERE id = ? AND career_id = ?').bind(data.active ? 1 : 0, now, id, CAREER).run();
+    await env.DB.prepare('UPDATE users SET is_active = ?, updated_at = ? WHERE id = ?' + scopeSql).bind(...(globalAdmin ? [data.active ? 1 : 0, now, id] : [data.active ? 1 : 0, now, id, CAREER])).run();
     if (!data.active) await env.DB.prepare('DELETE FROM user_sessions WHERE user_id = ?').bind(id).run();
     return json({ ok: true });
   }

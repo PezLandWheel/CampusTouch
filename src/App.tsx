@@ -1,5 +1,5 @@
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type Dispatch, type SetStateAction } from 'react';
 import { GraduationCap } from 'lucide-react';
 import CareerSelectionPage from './pages/CareerSelectionPage';
 import SystemsHomePage from './pages/SystemsHomePage';
@@ -14,6 +14,84 @@ import { PlaceholderPage } from './pages/PlaceholderPage';
 import { menuOptions } from './data/systems';
 
 type AuthUser = { id: string; displayName: string; email: string; role: string; careerId: string | null; careerName: string | null; roleName?: string };
+type AdminSessionState = { loading: boolean; user: AuthUser | null };
+
+function useAdminSessionGuard(user: AuthUser | null, setState: Dispatch<SetStateAction<AdminSessionState>>) {
+  useEffect(() => {
+    if (!user) return;
+    const idleLimit = 30 * 60 * 1000;
+    let lastActivity = Date.now();
+    let timer: ReturnType<typeof setTimeout>;
+    let validating = false;
+    let ended = false;
+    let lastPointerActivity = 0;
+
+    const redirectToLogin = () => {
+      if (ended) return;
+      ended = true;
+      setState({ loading: false, user: null });
+      window.location.replace('/login');
+    };
+    const expireSession = async () => {
+      if (ended) return;
+      ended = true;
+      await fetch('/api/auth/logout', { method: 'POST', cache: 'no-store' }).catch(() => undefined);
+      setState({ loading: false, user: null });
+      window.location.replace('/login');
+    };
+    const scheduleExpiry = () => {
+      clearTimeout(timer);
+      timer = setTimeout(() => void expireSession(), idleLimit);
+    };
+    const recordActivity = () => {
+      if (Date.now() - lastActivity >= idleLimit) { void expireSession(); return; }
+      lastActivity = Date.now();
+      scheduleExpiry();
+    };
+    const validateSession = async () => {
+      if (ended || validating) return;
+      if (Date.now() - lastActivity >= idleLimit) { await expireSession(); return; }
+      validating = true;
+      try {
+        const response = await fetch('/api/auth/me', { cache: 'no-store' });
+        if (!response.ok) { redirectToLogin(); return; }
+        const result = await response.json();
+        if (!result.user) { redirectToLogin(); return; }
+        setState({ loading: false, user: result.user });
+      } catch { /* A temporary network error should not end a valid session. */ }
+      finally { validating = false; }
+    };
+    const onPointerMove = () => {
+      const now = Date.now();
+      if (now - lastPointerActivity > 30_000) { lastPointerActivity = now; recordActivity(); }
+    };
+    const onResume = () => { if (document.visibilityState === 'visible') void validateSession(); };
+    const onVisibility = () => { if (document.visibilityState === 'visible') void validateSession(); };
+
+    scheduleExpiry();
+    window.addEventListener('pointerdown', recordActivity);
+    window.addEventListener('keydown', recordActivity);
+    window.addEventListener('touchstart', recordActivity);
+    window.addEventListener('scroll', recordActivity, true);
+    window.addEventListener('mousemove', onPointerMove);
+    window.addEventListener('focus', onResume);
+    window.addEventListener('pageshow', onResume);
+    window.addEventListener('popstate', onResume);
+    document.addEventListener('visibilitychange', onVisibility);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('pointerdown', recordActivity);
+      window.removeEventListener('keydown', recordActivity);
+      window.removeEventListener('touchstart', recordActivity);
+      window.removeEventListener('scroll', recordActivity, true);
+      window.removeEventListener('mousemove', onPointerMove);
+      window.removeEventListener('focus', onResume);
+      window.removeEventListener('pageshow', onResume);
+      window.removeEventListener('popstate', onResume);
+      document.removeEventListener('visibilitychange', onVisibility);
+    };
+  }, [user?.id, setState]);
+}
 
 function AdminRoute() {
   const location = useLocation();
@@ -25,6 +103,7 @@ function AdminRoute() {
     }).catch(() => { if (live) setState({ loading: false, user: null }); });
     return () => { live = false; };
   }, [location.pathname]);
+  useAdminSessionGuard(state.user, setState);
   if (state.loading) return <div className="route-loading">Verificando sesión…</div>;
   if (!state.user) return <Navigate to="/login" replace state={{ from: location.pathname }} />;
   if (state.user.role !== 'SUPER_ADMIN') return <Navigate to={state.user.role === 'USER' ? '/' : '/admin/carrera'} replace />;
@@ -40,11 +119,12 @@ function CareerAdminRoute() {
     }).catch(() => { if (live) setState({ loading: false, user: null }); });
     return () => { live = false; };
   }, []);
+  useAdminSessionGuard(state.user, setState);
   if (state.loading) return <div className="route-loading">Verificando sesión…</div>;
   if (!state.user) return <Navigate to="/login" replace />;
   if (state.user.role === 'USER') return <Navigate to="/" replace />;
   if (state.user.role === 'SUPER_ADMIN' || state.user.careerId === 'ingenieria-sistemas') return <SystemsAdminPage user={state.user} />;
-  return <main className="career-admin-future"><span><GraduationCap size={27} /></span><p>CampusTouch · Administración</p><h1>Hola, {state.user.displayName}</h1><h2>{state.user.careerName || 'Administración de carrera'}</h2><p>Tu cuenta tiene el rol de {state.user.roleName || 'administrador de carrera'}. El panel para esta carrera se habilitará en una siguiente etapa.</p><button onClick={async () => { await fetch('/api/auth/logout', { method: 'POST' }); window.location.assign('/login'); }}>Cerrar sesión</button></main>;
+  return <main className="career-admin-future"><span><GraduationCap size={27} /></span><p>CampusTouch · Administración</p><h1>Hola, {state.user.displayName}</h1><h2>{state.user.careerName || 'Administración de carrera'}</h2><p>Tu cuenta tiene el rol de {state.user.roleName || 'administrador de carrera'}. El panel para esta carrera se habilitará en una siguiente etapa.</p><button onClick={async () => { await fetch('/api/auth/logout', { method: 'POST', cache: 'no-store' }).catch(() => undefined); window.location.replace('/login'); }}>Cerrar sesión</button></main>;
 }
 
 export default function App() {

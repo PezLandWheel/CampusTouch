@@ -27,7 +27,7 @@ export default function AdminSettingsPage({ user }: { user: AuthUser }) {
     finally { setBusy(false); }
   }
 
-  async function logout() { await fetch('/api/auth/logout', { method: 'POST' }); window.location.assign('/login'); }
+  async function logout() { await fetch('/api/auth/logout', { method: 'POST', cache: 'no-store' }).catch(() => undefined); window.location.replace('/login'); }
 
   return <main className="admin-screen">
     <aside className="admin-sidebar"><div className="admin-brand"><span className="admin-brand-seal"><GraduationCap size={27} /></span><span><strong>CampusTouch</strong><small>Administración general</small></span></div>
