@@ -48,6 +48,7 @@ export default function SystemsHomePage() {
   useEffect(() => { setSlide((current) => Math.min(current, visibleSlides.length - 1)); }, [visibleSlides.length]);
 
   const featuredNews = newsSlides[slide];
+  const managedLinks = new Map(customLinks.map((link) => [link.title.trim().toLocaleLowerCase('es'), link]));
 
   useEffect(() => {
     const timer = setInterval(() => setSlide((current) => (current + 1) % visibleSlides.length), 6000);
@@ -97,16 +98,11 @@ export default function SystemsHomePage() {
 
           <section className="systems-reference-menu" id="opciones" aria-label="Opciones de Ingeniería de Sistemas">
             <div className="systems-reference-options">
-              {menuOptions.map((item, index) => (
-                <MenuOption key={item.title} item={{ ...item, subtitle: [
-                  'Entérate de las últimas novedades',
-                  'Consulta los horarios académicos',
-                  'Horarios de clase, atención y asesorías',
-                  'Accede al portal oficial de la Universidad',
-                  'Inicia sesión para ver tu información',
-                ][index] }} />
-              ))}
-              {customLinks.map((item) => <a className="systems-custom-link" key={item.url} href={item.url} target="_blank" rel="noreferrer"><strong>{item.title}</strong><span>{item.description || item.url}</span></a>)}
+              {menuOptions.map((item) => {
+                const managedLink = managedLinks.get(item.title.toLocaleLowerCase('es'));
+                const defaultUrl = 'externalUrl' in item ? item.externalUrl : undefined;
+                return <MenuOption key={item.title} item={{ ...item, externalUrl: managedLink?.url || defaultUrl }} />;
+              })}
             </div>
           </section>
         </div>

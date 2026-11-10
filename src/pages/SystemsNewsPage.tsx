@@ -127,9 +127,9 @@ export default function SystemsNewsPage() {
               <div className="systems-news-grid">
                 {visibleNews.map((item, index) => (
                   <article className="systems-news-card" key={item.id}>
-                    <div className={`systems-news-photo news-photo-${index % 6}`}>
+                    <button type="button" className={`systems-news-photo news-photo-${index % 6}`} onClick={() => openNews(item)} aria-label={`Abrir noticia: ${item.title}`}>
                       <img src={item.image} alt="" />
-                    </div>
+                    </button>
                     <div className="systems-news-card-body">
                       <div className="systems-news-meta">
                         <span className={`news-category-chip chip-${item.category.toLowerCase().replace(/\s+/g, '-')}`}>{item.category}</span>
@@ -183,11 +183,13 @@ export default function SystemsNewsPage() {
         <div className="systems-news-modal-backdrop" role="presentation" onClick={closeNews}>
           <article className="systems-news-modal" role="dialog" aria-modal="true" aria-labelledby="news-modal-title" onClick={(event) => event.stopPropagation()}>
             <button className="systems-news-modal-close" onClick={closeNews} aria-label="Cerrar noticia"><X /></button>
-            <img src={selectedNews.image} alt="" />
-            <span className="news-category-chip">{selectedNews.category}</span>
-            <h2 id="news-modal-title">{selectedNews.title}</h2>
-            <time>{selectedNews.date}</time>
-            <p>{selectedNews.body}</p>
+            <div className="systems-news-modal-media"><img src={selectedNews.image} alt={`Imagen de ${selectedNews.title}`} /></div>
+            <div className="systems-news-modal-content">
+              <span className="news-category-chip">{selectedNews.category}</span>
+              <h2 id="news-modal-title">{selectedNews.title}</h2>
+              <time>{selectedNews.date}</time>
+              <p>{selectedNews.body}</p>
+            </div>
           </article>
         </div>
       )}
